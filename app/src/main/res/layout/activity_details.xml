@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:padding="16dp">
+
+    <TextView
+        android:id="@+id/details_trip_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:textAppearanceLarge"
+        android:textColor="@color/black"
+        android:textSize="32sp"
+        tools:text="Trip to Maldives" />
+
+    <TextView
+        android:id="@+id/details_trip_destination"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="@color/black"
+        android:textSize="24sp"
+        android:textAppearance="?android:textAppearanceMedium"
+        tools:text="Destination: Maldives" />
+
+<!--    <RatingBar-->
+<!--        android:id="@+id/details_trip_rating"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        style="@style/Widget.AppCompat.RatingBar.Small"-->
+<!--        android:isIndicator="true"-->
+<!--        android:progressTint="#F7C501"-->
+<!--        android:numStars="10"-->
+<!--        android:stepSize="0.1"-->
+<!--        tools:rating="4.5" />-->
+
+    <TextView
+        android:id="@+id/details_trip_price"
+        android:layout_width="wrap_content"
+        android:textColor="@color/black"
+        android:layout_height="wrap_content"
+        android:textSize="24sp"
+        tools:text="Price: $1500" />
+
+    <TextView
+        android:id="@+id/details_trip_type"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="24sp"
+        tools:text="Type: Sea Side"/>
+
+    <TextView
+        android:id="@+id/details_start_date"
+        android:layout_width="match_parent"
+        android:textColor="@color/black"
+        android:layout_height="wrap_content"
+        tools:text="Start date: 23.07.2021"/>
+
+    <TextView
+        android:id="@+id/details_end_date"
+        android:textColor="@color/black"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        tools:text="End date: 31.07.2021"/>
+
+    <TextView
+        android:id="@+id/details_weather_state"
+        android:textColor="@color/black"
+        android:layout_marginTop="16dp"
+        android:textSize="32dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        tools:text="Rainy"/>
+
+    <TextView
+        android:id="@+id/details_weather_temperature"
+        android:textColor="@color/black"
+        android:textSize="32dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        tools:text="32C"/>
+</LinearLayout>

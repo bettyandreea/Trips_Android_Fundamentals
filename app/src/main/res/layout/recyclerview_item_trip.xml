@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    app:cardElevation="16dp"
+    android:layout_margin="16dp">
+
+    <RelativeLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <ImageView
+            android:id="@+id/trip_image"
+            android:layout_width="144dp"
+            android:layout_height="168dp"
+            android:scaleType="centerCrop"
+            tools:src="@drawable/maldives_trip" />
+
+        <TextView
+            android:id="@+id/trip_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_toEndOf="@id/trip_image"
+            android:textAppearance="?android:textAppearanceLarge"
+            android:textColor="@color/black"
+            android:textSize="32sp"
+            tools:text="Trip to Maldives" />
+
+        <TextView
+            android:id="@+id/trip_destination"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/trip_name"
+            android:layout_marginStart="16dp"
+            android:textSize="24sp"
+            android:layout_toEndOf="@id/trip_image"
+            android:textAppearance="?android:textAppearanceMedium"
+            tools:text="Maldives" />
+
+        <RatingBar
+            android:id="@+id/trip_rating"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            style="@style/Widget.AppCompat.RatingBar.Small"
+            android:layout_below="@id/trip_destination"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="8dp"
+            android:layout_toEndOf="@id/trip_image"
+            android:isIndicator="true"
+            android:progressTint="#F7C501"
+            android:numStars="10"
+            android:stepSize="0.1"
+            android:rating="4.5" />
+
+        <TextView
+            android:id="@+id/trip_price"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@id/trip_rating"
+            android:layout_alignParentEnd="true"
+            android:textSize="24sp"
+            tools:text="$1500" />
+
+        <Button
+            android:id="@+id/trip_check_favorites"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_margin="16dp"
+            android:clickable="true"
+            android:layout_alignParentEnd="true"
+            android:backgroundTint="@color/red"
+            android:background="@drawable/custom_checkbox"
+            android:layout_alignTop="@id/trip_name" />
+
+    </RelativeLayout>
+
+</com.google.android.material.card.MaterialCardView>

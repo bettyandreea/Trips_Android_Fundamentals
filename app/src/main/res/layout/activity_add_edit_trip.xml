@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <ImageView
+            android:id="@+id/add_edit_image"
+            android:padding="16dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:src="@drawable/maldives_trip"/>
+
+        <EditText
+            android:id="@+id/add_edit_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginBottom="8dp"
+            android:hint="Trip Title"
+            android:inputType="text"
+            android:padding="8dp" />
+
+        <EditText
+            android:id="@+id/add_edit_destination"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginBottom="8dp"
+            android:hint="Trip Destination City"
+            android:inputType="text"
+            android:padding="8dp" />
+
+        <EditText
+            android:id="@+id/add_edit_price"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginBottom="8dp"
+            android:hint="Trip Price"
+            android:inputType="number"
+            android:padding="8dp" />
+
+        <EditText
+            android:id="@+id/add_edit_rating"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginBottom="8dp"
+            android:hint="Trip Rating"
+            android:inputType="number"
+            android:padding="8dp" />
+
+        <EditText
+            android:id="@+id/add_edit_type"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginBottom="8dp"
+            android:hint="Trip Type (Sea Side, City Break or Mountains)"
+            android:inputType="text"
+            android:padding="8dp" />
+
+
+        <EditText
+            android:id="@+id/add_edit_start_date"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginBottom="8dp"
+            android:hint="Start Date"
+            android:inputType="date"
+            android:padding="8dp" />
+
+        <EditText
+            android:id="@+id/add_edit_end_date"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginBottom="8dp"
+            android:hint="End Date"
+            android:inputType="date"
+            android:padding="8dp" />
+
+        <Button
+            android:id="@+id/add_edit_is_favourite"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginBottom="8dp"
+            android:background="@drawable/ic_full_heart"/>
+
+<!--        <RadioGroup-->
+<!--            android:id="@+id/add_edit_type"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content">-->
+
+<!--            <RadioButton-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:text="City Break"/>-->
+
+<!--            <RadioButton-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:text="Sea Side"/>-->
+
+<!--            <RadioButton-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:text="Mountains"/>-->
+
+<!--        </RadioGroup>-->
+
+<!--        <DatePicker-->
+<!--            android:id="@+id/add_edit_start_date"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"/>-->
+
+<!--        <DatePicker-->
+<!--            android:id="@+id/add_edit_end_date"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"/>-->
+
+    </LinearLayout>
+
+</ScrollView>

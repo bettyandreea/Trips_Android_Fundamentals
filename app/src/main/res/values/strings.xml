@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">Trips</string>
+    <string name="navigation_drawer_open">Open</string>
+    <string name="navigation_drawer_close">Close</string>
+    <string name="no_location_error">Location not available</string>
+    <string name="empty_not_saved">not saved</string>
+</resources>
