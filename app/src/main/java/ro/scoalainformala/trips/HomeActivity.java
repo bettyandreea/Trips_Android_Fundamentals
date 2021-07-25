@@ -3,8 +3,10 @@ package ro.scoalainformala.trips;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -12,8 +14,11 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
@@ -21,10 +26,12 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.snackbar.Snackbar;
 
 import java.util.List;
 
+import cz.msebera.android.httpclient.protocol.HTTP;
 import ro.scoalainformala.trips.R.drawable;
 import ro.scoalainformala.trips.Trip.Trip;
 import ro.scoalainformala.trips.Trip.TripViewModel;
@@ -102,14 +109,16 @@ public class HomeActivity extends AppCompatActivity{
             @Override
             public void onLongItemClick(Trip trip) {
                 Intent intent = new Intent(HomeActivity.this, AddEditTripActivity.class);
-                intent.putExtra(AddEditTripActivity.EXTRA_IMAGE, trip.getImage());
+                intent.putExtra(AddEditTripActivity.EXTRA_ID, trip.getId());
                 intent.putExtra(AddEditTripActivity.EXTRA_TITLE, trip.getTitle());
+                intent.putExtra(AddEditTripActivity.EXTRA_IMAGE, trip.getImage());
                 intent.putExtra(AddEditTripActivity.EXTRA_DESTINATION, trip.getDestination());
                 intent.putExtra(AddEditTripActivity.EXTRA_PRICE, trip.getPrice());
-                intent.putExtra(AddEditTripActivity.EXTRA_RATING, trip.getRating());
                 intent.putExtra(AddEditTripActivity.EXTRA_TYPE, trip.getType());
+                intent.putExtra(AddEditTripActivity.EXTRA_RATING, trip.getRating());
                 intent.putExtra(AddEditTripActivity.EXTRA_START_DATE, trip.getStartDate());
                 intent.putExtra(AddEditTripActivity.EXTRA_END_DATE, trip.getEndDate());
+                intent.putExtra(AddEditTripActivity.EXTRA_IS_FAVOURITE, trip.isFavourite());
                 startActivityForResult(intent, EDIT_TRIP_ACTIVITY_REQUEST_CODE);
             }
         });
@@ -134,48 +143,46 @@ public class HomeActivity extends AppCompatActivity{
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data){
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == NEW_TRIP_ACTIVITY_REQUEST_CODE && resultCode == RESULT_OK) {
 
-        if(requestCode == NEW_TRIP_ACTIVITY_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
-
-            int image = data.getIntExtra(AddEditTripActivity.EXTRA_IMAGE, blank);
+            // String title, int image, String destination, String price, float rating, String type, String startDate, String endDate, Boolean isFavourite
             String title = data.getStringExtra(AddEditTripActivity.EXTRA_TITLE);
             String destination = data.getStringExtra(AddEditTripActivity.EXTRA_DESTINATION);
+            int image = data.getIntExtra(AddEditTripActivity.EXTRA_IMAGE, R.drawable.blank);
             String price = data.getStringExtra(AddEditTripActivity.EXTRA_PRICE);
             float rating = Float.parseFloat(data.getStringExtra(AddEditTripActivity.EXTRA_RATING));
             String type = data.getStringExtra(AddEditTripActivity.EXTRA_TYPE);
             String startDate = data.getStringExtra(AddEditTripActivity.EXTRA_START_DATE);
             String endDate = data.getStringExtra(AddEditTripActivity.EXTRA_END_DATE);
-            Trip trip = new Trip(title, image, destination, price, rating, type, startDate, endDate, false);
+            Boolean isFavorite = Boolean.parseBoolean(data.getStringExtra(AddEditTripActivity.EXTRA_IS_FAVOURITE));
+            Trip trip = new Trip(title, image, destination, price, rating, type, startDate, endDate, isFavorite);
+
             tripViewModel.insert(trip);
+            Toast.makeText(this, "Trip saved", Toast.LENGTH_SHORT).show();
 
-            Toast.makeText(this, "Trip saved", Toast.LENGTH_LONG).show();
-
-        } else if (requestCode == EDIT_TRIP_ACTIVITY_REQUEST_CODE && resultCode == Activity.RESULT_OK){
+        } else if (requestCode == EDIT_TRIP_ACTIVITY_REQUEST_CODE && resultCode == RESULT_OK) {
             int id = data.getIntExtra(AddEditTripActivity.EXTRA_ID, -1);
-            if(id == -1){
-                Toast.makeText(this, "Trip can't be updated", Toast.LENGTH_LONG).show();
+            if (id == -1) {
+                Toast.makeText(this, "Trip can't be updated", Toast.LENGTH_SHORT).show();
                 return;
             }
-
             String title = data.getStringExtra(AddEditTripActivity.EXTRA_TITLE);
-            int image = data.getIntExtra(AddEditTripActivity.EXTRA_IMAGE, blank);
             String destination = data.getStringExtra(AddEditTripActivity.EXTRA_DESTINATION);
+            int image = data.getIntExtra(AddEditTripActivity.EXTRA_IMAGE, R.drawable.blank);
             String price = data.getStringExtra(AddEditTripActivity.EXTRA_PRICE);
             float rating = Float.parseFloat(data.getStringExtra(AddEditTripActivity.EXTRA_RATING));
             String type = data.getStringExtra(AddEditTripActivity.EXTRA_TYPE);
             String startDate = data.getStringExtra(AddEditTripActivity.EXTRA_START_DATE);
             String endDate = data.getStringExtra(AddEditTripActivity.EXTRA_END_DATE);
-            Trip trip = new Trip(title, image, destination, price, rating, type, startDate, endDate, false);
+            Boolean isFavorite = Boolean.parseBoolean(data.getStringExtra(AddEditTripActivity.EXTRA_IS_FAVOURITE));
+            Trip trip = new Trip(title, image, destination, price, rating, type, startDate, endDate, isFavorite);
             trip.setId(id);
             tripViewModel.update(trip);
-
-            Toast.makeText(this, "Trip updated", Toast.LENGTH_LONG).show();
-
-        } else{
-            Snackbar.make(findViewById(id.root), string.empty_not_saved, Snackbar.LENGTH_LONG)
-                    .show();
+            Toast.makeText(this, "Trip updated", Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(this, "Note not saved", Toast.LENGTH_SHORT).show();
         }
     }
 

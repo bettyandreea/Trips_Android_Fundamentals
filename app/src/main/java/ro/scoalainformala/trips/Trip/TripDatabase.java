@@ -47,17 +47,17 @@ public abstract class TripDatabase extends RoomDatabase {
                 TripDao dao = INSTANCE.getTripDao();
                 dao.deleteAll();
 
-                Trip trip = new Trip("Trip to Maldives", R.drawable.maldives_trip, "Maldives", "$1500", 8.5F, "Sea Side", "24.07.2021", "31.07.2021", true);
+                Trip trip = new Trip("Trip to Maldives", R.drawable.maldives_trip, "Maldives", "$1500", 4.5F, "Sea Side", "24.07.2021", "31.07.2021", true);
                 dao.insert(trip);
-                trip = new Trip("Meet Disneyland", R.drawable.disneyland_trip, "Paris", "$2000", 9.5F, "City Break", "12.05.2022", "17.05.2022", false);
+                trip = new Trip("Meet Disneyland", R.drawable.disneyland_trip, "Paris", "$2000", 5F, "City Break", "12.05.2022", "17.05.2022", false);
                 dao.insert(trip);
-                trip = new Trip("Paradise of Mykonos", R.drawable.mykonos_trip, "Mykonos", "$1450", 8.5F, "Sea Side", "20.08.2021", "28.08.2021", false);
+                trip = new Trip("Paradise of Mykonos", R.drawable.mykonos_trip, "Mykonos", "$1450", 4.5F, "Sea Side", "20.08.2021", "28.08.2021", false);
                 dao.insert(trip);
-                trip = new Trip("Shopping at Milan", R.drawable.milan_trip, "Milan", "$1500", 8.0F, "City Break", "13.10.2021", "15.10.2021", false);
+                trip = new Trip("Shopping at Milan", R.drawable.milan_trip, "Milan", "$1500", 4.0F, "City Break", "13.10.2021", "15.10.2021", false);
                 dao.insert(trip);
-                trip = new Trip("Big Apple - New York City", R.drawable.new_york_trip, "New York City", "$3000", 9.5F, "City Break", "23.07.2021", "05.08.2021", true);
+                trip = new Trip("Big Apple - New York City", R.drawable.new_york_trip, "New York City", "$3000", 5F, "City Break", "23.07.2021", "05.08.2021", true);
                 dao.insert(trip);
-                trip = new Trip("Tour of London", R.drawable.london_trip, "London", "$1000", 7.5F, "City Break", "12.08.2021", "20.08.2021", false);
+                trip = new Trip("Tour of London", R.drawable.london_trip, "London", "$1000", 3.5F, "City Break", "12.08.2021", "20.08.2021", false);
                 dao.insert(trip);
             });
         }

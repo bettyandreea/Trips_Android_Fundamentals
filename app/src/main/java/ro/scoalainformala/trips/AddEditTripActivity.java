@@ -5,12 +5,8 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.widget.Button;
-import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.RadioButton;
-import android.widget.RadioGroup;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -37,14 +33,13 @@ public class AddEditTripActivity extends AppCompatActivity {
     private EditText editStartDate;
     private EditText editEndDate;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_edit_trip);
 
-        editTitle = findViewById(R.id.add_edit_title);
         editImage = findViewById(R.id.add_edit_image);
+        editTitle = findViewById(R.id.add_edit_title);
         editDestination = findViewById(R.id.add_edit_destination);
         editPrice = findViewById(R.id.add_edit_price);
         editRating = findViewById(R.id.add_edit_rating);
@@ -56,37 +51,40 @@ public class AddEditTripActivity extends AppCompatActivity {
         Intent intent = getIntent();
 
         if(intent.hasExtra(EXTRA_ID)){
-            setTitle("Edit trip");
-            editTitle.setText(intent.getStringExtra(EXTRA_TITLE));
+            setTitle("Edit Trip");
             editImage.setImageResource(R.drawable.blank);
+            editTitle.setText(intent.getStringExtra(EXTRA_TITLE));
             editDestination.setText(intent.getStringExtra(EXTRA_DESTINATION));
             editPrice.setText(intent.getStringExtra(EXTRA_PRICE));
             editRating.setText(intent.getStringExtra(EXTRA_RATING));
             editType.setText(intent.getStringExtra(EXTRA_TYPE));
             editStartDate.setText(intent.getStringExtra(EXTRA_START_DATE));
             editEndDate.setText(intent.getStringExtra(EXTRA_END_DATE));
-        } else{
-            setTitle("Add trip");
+        } else {
+            setTitle("Add Trip");
         }
     }
 
-    private void saveTrip() {
+    private void saveTrip(){
         String title = editTitle.getText().toString();
         int image = R.drawable.blank;
         String destination = editDestination.getText().toString();
-        String price = "$"+ editPrice.getText().toString();
+        String price;
+        if(editPrice.getText().toString().startsWith("$")){
+             price = editPrice.getText().toString();
+        } else{
+            price = "$"+ editPrice.getText().toString();
+        }
         String rating = editRating.getText().toString();
-//        String type = ((RadioButton)findViewById(editType.getCheckedRadioButtonId())).getText().toString();
-//        String startDate = editStartDate.getDayOfMonth() + "." + editStartDate.getMonth() + "." + editStartDate.getYear();
-//        String endDate = editEndDate.getDayOfMonth() + "." + editEndDate.getMonth() + "." + editEndDate.getYear();
         String type = editType.getText().toString();
         String startDate = editStartDate.getText().toString();
         String endDate = editEndDate.getText().toString();
 
-        if(title.isEmpty() || destination.isEmpty() || rating.isEmpty() || type.isEmpty() || startDate.isEmpty() || endDate.isEmpty()){
-            Toast.makeText(AddEditTripActivity.this, "Please insert title, destination, price, type, rating, start date and end date for your trip", Toast.LENGTH_LONG).show();
+        if(title.trim().isEmpty() || destination.trim().isEmpty() || price.trim().isEmpty() || rating.trim().isEmpty() || type.trim().isEmpty() || startDate.trim().isEmpty() || endDate.trim().isEmpty()){
+            Toast.makeText(this, "Please insert title, destination, price, type, rating, start date and end date for your trip", Toast.LENGTH_LONG).show();
             return;
         }
+
         Intent data = new Intent();
         data.putExtra(EXTRA_TITLE, title);
         data.putExtra(EXTRA_IMAGE, image);
@@ -99,7 +97,7 @@ public class AddEditTripActivity extends AppCompatActivity {
         data.putExtra(EXTRA_IS_FAVOURITE, false);
 
         int id = getIntent().getIntExtra(EXTRA_ID, -1);
-        if(id != -1){
+        if (id != -1) {
             data.putExtra(EXTRA_ID, id);
         }
         setResult(RESULT_OK, data);
@@ -112,7 +110,6 @@ public class AddEditTripActivity extends AppCompatActivity {
         menuInflater.inflate(R.menu.add_menu, menu);
         return true;
     }
-
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {

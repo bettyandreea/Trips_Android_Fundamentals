@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
@@ -46,11 +47,13 @@ public class TripListAdapter extends RecyclerView.Adapter<TripListAdapter.TripVi
         if (mTrips != null) {
             Trip current = mTrips.get(position);
             holder.tripName.setText(current.getTitle());
+            holder.tripImage.setImageResource(current.getImage());
             holder.destination.setText(current.getDestination());
             holder.price.setText(current.getPrice());
             holder.rating.setRating(current.getRating());
         } else {
             holder.tripName.setText("Nothing");
+            holder.tripImage.setImageResource(R.drawable.blank);
             holder.destination.setText("Nothing");
             holder.price.setText("$0");
             holder.rating.setRating(0F);
@@ -74,6 +77,7 @@ public class TripListAdapter extends RecyclerView.Adapter<TripListAdapter.TripVi
     }
 
     class TripViewHolder extends RecyclerView.ViewHolder {
+        private final ImageView tripImage;
         private final TextView tripName;
         private final TextView destination;
         private final TextView price;
@@ -82,6 +86,7 @@ public class TripListAdapter extends RecyclerView.Adapter<TripListAdapter.TripVi
         private TripViewHolder(View itemView) {
             super(itemView);
             tripName = itemView.findViewById(R.id.trip_name);
+            tripImage = itemView.findViewById(R.id.trip_image);
             destination = itemView.findViewById(R.id.trip_destination);
             price = itemView.findViewById(R.id.trip_price);
             rating = itemView.findViewById(R.id.trip_rating);
