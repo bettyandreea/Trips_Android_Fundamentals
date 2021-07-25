@@ -3,10 +3,12 @@ package ro.scoalainformala.trips;
 import retrofit2.Call;
 import retrofit2.http.GET;
 import retrofit2.http.Query;
-import ro.scoalainformala.trips.Trip.TripViewModel;
 
 public interface OpenWeatherService {
 
-    @GET("data/2.5/weather?q={city name}&appid={API key}")
-    Call<TripViewModel> getWeather(@Query("api_key") String apiKey);
+    @GET("data/2.5/weather")
+    Call<WeatherResponse> getWeather(@Query("lat") String lat, @Query("lon") String lon, @Query("appid") String APP_ID);
+
+    @GET("data/2.5/weather")
+    Call<WeatherResponse> getWeatherCity(@Query("q") String city, @Query("appid") String APP_ID);
 }

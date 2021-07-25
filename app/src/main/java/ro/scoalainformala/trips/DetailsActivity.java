@@ -2,10 +2,8 @@ package ro.scoalainformala.trips;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
-import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
@@ -18,18 +16,17 @@ import androidx.annotation.NonNull;
 import androidx.annotation.RequiresPermission;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
-import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
-import com.android.volley.Header;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.material.snackbar.Snackbar;
-import com.loopj.android.http.AsyncHttpClient;
-import com.loopj.android.http.JsonHttpResponseHandler;
-import com.loopj.android.http.RequestParams;
 
-import org.json.JSONObject;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 
 public class
@@ -67,7 +64,10 @@ DetailsActivity extends AppCompatActivity {
     final float MIN_DISTANCE = 1000;
     final int REQUEST_CODE = 101;
     String Location_Provider = LocationManager.GPS_PROVIDER;
-    final String WEATHER_URL = "https://api.openweathermap.org/data/2.5/weather";
+    final String WEATHER_URL = "https://api.openweathermap.org/";
+    private String lat;
+    private String lon;
+    private String city;
 
     private TextView tripTitle;
     private TextView tripDestination;
@@ -76,7 +76,7 @@ DetailsActivity extends AppCompatActivity {
     private TextView tripType;
     private TextView tripStartDate;
     private TextView tripEndDate;
-    private TextView weatherState;
+    private TextView weather;
     private TextView temperature;
 
     LocationManager mLocationManager;
@@ -95,7 +95,7 @@ DetailsActivity extends AppCompatActivity {
         tripType = findViewById(R.id.details_trip_type);
         tripStartDate = findViewById(R.id.details_start_date);
         tripEndDate = findViewById(R.id.details_end_date);
-        weatherState = findViewById(R.id.details_weather_state);
+        weather = findViewById(R.id.details_weather_state);
         temperature = findViewById(R.id.details_weather_temperature);
 
         Intent intent = getIntent();
@@ -108,7 +108,7 @@ DetailsActivity extends AppCompatActivity {
         tripStartDate.setText(intent.getStringExtra(EXTRA_START_DATE_D));
         tripEndDate.setText(intent.getStringExtra(EXTRA_END_DATE_D));
 
-        String city = tripDestination.getText().toString();
+        city = tripDestination.getText().toString();
 
 //        if(city != null){
 //            getWeatherForNewCity(city);
@@ -121,10 +121,10 @@ DetailsActivity extends AppCompatActivity {
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             // Request location permission
             requestPermissionLauncher.launch(Manifest.permission.ACCESS_COARSE_LOCATION);
+        } else if (city != null){
+            getCityData();
         } else {
-            // We already have location
-            getWeatherForNewCity(city);
-            //displayCurrentUserLocation();
+            getCurrentData();
         }
     }
 
@@ -134,15 +134,14 @@ DetailsActivity extends AppCompatActivity {
             // Got last known location. In some rare situation this can be null.
             if(location != null){
                 // Logic to handle location object
-                String latitude = String.valueOf(location.getLatitude());
-                String longitude = String.valueOf(location.getLongitude());
+                lat = String.valueOf(location.getLatitude());
+                lon = String.valueOf(location.getLongitude());
 
-                RequestParams params = new RequestParams();
-                params.put("lat", latitude);
-                params.put("lon", longitude);
-                params.put("appid", APP_ID);
-                doNetworking(params);
-
+//                RequestParams params = new RequestParams();
+//                params.put("lat", latitude);
+//                params.put("lon", longitude);
+//                params.put("appid", APP_ID);
+//                doNetworking(params);
             } else{
                 Toast.makeText(this, "Unknown location", Toast.LENGTH_LONG).show();
             }
@@ -153,6 +152,92 @@ DetailsActivity extends AppCompatActivity {
         CoordinatorLayout coordinatorLayout = findViewById(R.id.coordinator);
 
         Snackbar.make(coordinatorLayout, R.string.no_location_error, Snackbar.LENGTH_LONG).show();
+    }
+
+    private void getCityData() {
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(WEATHER_URL)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+        OpenWeatherService service = retrofit.create(OpenWeatherService.class);
+        Call<WeatherResponse> call = service.getWeatherCity(city, APP_ID);
+        call.enqueue(new Callback<WeatherResponse>() {
+            @Override
+            public void onResponse(@NonNull Call<WeatherResponse> call, @NonNull Response<WeatherResponse> response) {
+                if (response.code() == 200) {
+                    WeatherResponse weatherResponse = response.body();
+                    assert weatherResponse != null;
+
+                    String stringBuilder = "Country: " +
+                            weatherResponse.sys.country +
+                            "\n" +
+                            "Temperature: " +
+                            weatherResponse.main.temp +
+                            "\n" +
+                            "Temperature(Min): " +
+                            weatherResponse.main.temp_min +
+                            "\n" +
+                            "Temperature(Max): " +
+                            weatherResponse.main.temp_max +
+                            "\n" +
+                            "Humidity: " +
+                            weatherResponse.main.humidity +
+                            "\n" +
+                            "Pressure: " +
+                            weatherResponse.main.pressure;
+
+                    weather.setText(stringBuilder);
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<WeatherResponse> call, @NonNull Throwable t) {
+                weather.setText(t.getMessage());
+            }
+        });
+    }
+
+    private void getCurrentData() {
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(WEATHER_URL)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+        OpenWeatherService service = retrofit.create(OpenWeatherService.class);
+        Call<WeatherResponse> call = service.getWeather(lat, lon, APP_ID);
+        call.enqueue(new Callback<WeatherResponse>() {
+            @Override
+            public void onResponse(@NonNull Call<WeatherResponse> call, @NonNull Response<WeatherResponse> response) {
+                if (response.code() == 200) {
+                    WeatherResponse weatherResponse = response.body();
+                    assert weatherResponse != null;
+
+                    String stringBuilder = "Country: " +
+                            weatherResponse.sys.country +
+                            "\n" +
+                            "Temperature: " +
+                            weatherResponse.main.temp +
+                            "\n" +
+                            "Temperature(Min): " +
+                            weatherResponse.main.temp_min +
+                            "\n" +
+                            "Temperature(Max): " +
+                            weatherResponse.main.temp_max +
+                            "\n" +
+                            "Humidity: " +
+                            weatherResponse.main.humidity +
+                            "\n" +
+                            "Pressure: " +
+                            weatherResponse.main.pressure;
+
+                    weather.setText(stringBuilder);
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<WeatherResponse> call, @NonNull Throwable t) {
+                weather.setText(t.getMessage());
+            }
+        });
     }
 
 //    @Override
@@ -168,12 +253,12 @@ DetailsActivity extends AppCompatActivity {
 //        }
 //    }
 
-    private void getWeatherForNewCity(String city){
-        RequestParams params = new RequestParams();
-        params.put("q", city);
-        params.put("appid", APP_ID);
-        doNetworking(params);
-    }
+//    private void getWeatherForNewCity(String city){
+//        RequestParams params = new RequestParams();
+//        params.put("q", city);
+//        params.put("appid", APP_ID);
+//        doNetworking(params);
+//    }
 
 //    private void getWeatherForCurrentLocation(){
 //        mLocationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
@@ -207,7 +292,6 @@ DetailsActivity extends AppCompatActivity {
 //        };
 //
 //        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-//            // TODO: Consider calling
 //            //    ActivityCompat#requestPermissions
 //            // here to request the missing permissions, and then overriding
 //            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
@@ -239,38 +323,29 @@ DetailsActivity extends AppCompatActivity {
 //        }
 //    }
 
-    private  void doNetworking(RequestParams params)
-    {
-        AsyncHttpClient client = new AsyncHttpClient();
-        client.get(WEATHER_URL,params,new JsonHttpResponseHandler(){
-            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-
-                Toast.makeText(DetailsActivity.this,"Data got Success",Toast.LENGTH_SHORT).show();
-
-                weatherData weatherD = weatherData.fromJson(response);
-                updateUI(weatherD);
-
-
-                // super.onSuccess(statusCode, headers, response);
-            }
-
-            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
-                //super.onFailure(statusCode, headers, throwable, errorResponse);
-            }
-        });
-    }
-
-    private void updateUI(weatherData weather){
-        temperature.setText(weather.getmTemperature());
-        weatherState.setText(weather.getmWeatherType());
-    }
-
-//    @Override
-//    protected void onPause() {
-//        super.onPause();
-//        if(mLocationManager!=null)
-//        {
-//            mLocationManager.removeUpdates(mLocationListener);
-//        }
+//    private  void doNetworking(RequestParams params)
+//    {
+//        AsyncHttpClient client = new AsyncHttpClient();
+//        client.get(WEATHER_URL,params,new JsonHttpResponseHandler(){
+//            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+//
+//                Toast.makeText(DetailsActivity.this,"Data got Success",Toast.LENGTH_SHORT).show();
+//
+//                weatherData weatherD = weatherData.fromJson(response);
+//                updateUI(weatherD);
+//
+//
+//                // super.onSuccess(statusCode, headers, response);
+//            }
+//
+//            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+//                //super.onFailure(statusCode, headers, throwable, errorResponse);
+//            }
+//        });
+//    }
+//
+//    private void updateUI(weatherData weather){
+//        temperature.setText(weather.getmTemperature());
+//        weatherState.setText(weather.getmWeatherType());
 //    }
 }

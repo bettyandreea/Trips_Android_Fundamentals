@@ -8,14 +8,6 @@ import androidx.lifecycle.LiveData;
 
 import java.util.List;
 
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-import retrofit2.Retrofit;
-import ro.scoalainformala.trips.OpenWeatherService;
-import ro.scoalainformala.trips.RetrofitClient;
-import ro.scoalainformala.trips.TripsCallback;
-
 public class TripViewModel extends AndroidViewModel {
 
     private TripRepository tripRepository;
@@ -46,20 +38,5 @@ public class TripViewModel extends AndroidViewModel {
 
     public void update(Trip trip){
         tripRepository.update(trip);
-    }
-
-    public void getWeather(TripsCallback callback){
-        OpenWeatherService service = RetrofitClient.getRetrofitInstance().create(OpenWeatherService.class);
-        service.getWeather(RetrofitClient.API_KEY).enqueue(new Callback<TripViewModel>() {
-            @Override
-            public void onResponse(Call<TripViewModel> call, Response<TripViewModel> response) {
-                callback.onSuccess(response.body().getTrips());
-            }
-
-            @Override
-            public void onFailure(Call<TripViewModel> call, Throwable t) {
-                callback.onFailure(t);
-            }
-        });
     }
 }
