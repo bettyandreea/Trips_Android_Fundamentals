@@ -60,10 +60,6 @@ DetailsActivity extends AppCompatActivity {
     public static final String EXTRA_IS_FAVOURITE_D = "ro.scoalainformala.trips.EXTRA_IS_FAVOURITE_D";
 
     final String APP_ID = "95742b5d52241bd561e65e6b5ec02605";
-    final long MIN_TIME = 5000;
-    final float MIN_DISTANCE = 1000;
-    final int REQUEST_CODE = 101;
-    String Location_Provider = LocationManager.GPS_PROVIDER;
     final String WEATHER_URL = "https://api.openweathermap.org/";
     private String lat;
     private String lon;
@@ -78,9 +74,6 @@ DetailsActivity extends AppCompatActivity {
     private TextView tripEndDate;
     private TextView weather;
     private TextView temperature;
-
-    LocationManager mLocationManager;
-    LocationListener mLocationListener;
 
 
     @Override
@@ -110,12 +103,6 @@ DetailsActivity extends AppCompatActivity {
 
         city = tripDestination.getText().toString();
 
-//        if(city != null){
-//            getWeatherForNewCity(city);
-//        } else{
-//            getWeatherForCurrentLocation();
-//        }
-
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
 
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
@@ -136,12 +123,6 @@ DetailsActivity extends AppCompatActivity {
                 // Logic to handle location object
                 lat = String.valueOf(location.getLatitude());
                 lon = String.valueOf(location.getLongitude());
-
-//                RequestParams params = new RequestParams();
-//                params.put("lat", latitude);
-//                params.put("lon", longitude);
-//                params.put("appid", APP_ID);
-//                doNetworking(params);
             } else{
                 Toast.makeText(this, "Unknown location", Toast.LENGTH_LONG).show();
             }
@@ -239,113 +220,4 @@ DetailsActivity extends AppCompatActivity {
             }
         });
     }
-
-//    @Override
-//    protected void onResume(){
-//        super.onResume();
-//        Intent intent = getIntent();
-//        String city = tripDestination.getText().toString();
-//
-//        if(city != null){
-//            getWeatherForNewCity(city);
-//        } else{
-//            getWeatherForCurrentLocation();
-//        }
-//    }
-
-//    private void getWeatherForNewCity(String city){
-//        RequestParams params = new RequestParams();
-//        params.put("q", city);
-//        params.put("appid", APP_ID);
-//        doNetworking(params);
-//    }
-
-//    private void getWeatherForCurrentLocation(){
-//        mLocationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-//        mLocationListener = new LocationListener() {
-//            @Override
-//            public void onLocationChanged(@NonNull Location location) {
-//
-//                String latitude = String.valueOf(location.getLatitude());
-//                String longitude = String.valueOf(location.getLongitude());
-//
-//                RequestParams params = new RequestParams();
-//                params.put("lat", latitude);
-//                params.put("lon", longitude);
-//                params.put("appid", APP_ID);
-//                doNetworking(params);
-//            }
-//            @Override
-//            public void onStatusChanged(String provider, int status, Bundle extras){
-//
-//            }
-//
-//            @Override
-//            public void onProviderEnabled(String provider) {
-//
-//            }
-//
-//            @Override
-//            public void onProviderDisabled(String provider) {
-//                //not able to get location
-//            }
-//        };
-//
-//        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-//            //    ActivityCompat#requestPermissions
-//            // here to request the missing permissions, and then overriding
-//            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-//            //                                          int[] grantResults)
-//            // to handle the case where the user grants the permission. See the documentation
-//            // for ActivityCompat#requestPermissions for more details.
-//            ActivityCompat.requestPermissions(this,new String[]{Manifest.permission.ACCESS_FINE_LOCATION},REQUEST_CODE);
-//            return;
-//        }
-//        mLocationManager.requestLocationUpdates(Location_Provider, MIN_TIME, MIN_DISTANCE, mLocationListener);
-//    }
-
-//    @Override
-//    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-//        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-//
-//
-//        if(requestCode==REQUEST_CODE)
-//        {
-//            if(grantResults.length>0 && grantResults[0]==PackageManager.PERMISSION_GRANTED)
-//            {
-//                Toast.makeText(DetailsActivity.this,"Location got successfully",Toast.LENGTH_SHORT).show();
-//                getWeatherForCurrentLocation();
-//            }
-//            else
-//            {
-//                //user denied the permission
-//            }
-//        }
-//    }
-
-//    private  void doNetworking(RequestParams params)
-//    {
-//        AsyncHttpClient client = new AsyncHttpClient();
-//        client.get(WEATHER_URL,params,new JsonHttpResponseHandler(){
-//            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-//
-//                Toast.makeText(DetailsActivity.this,"Data got Success",Toast.LENGTH_SHORT).show();
-//
-//                weatherData weatherD = weatherData.fromJson(response);
-//                updateUI(weatherD);
-//
-//
-//                // super.onSuccess(statusCode, headers, response);
-//            }
-//
-//            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
-//                //super.onFailure(statusCode, headers, throwable, errorResponse);
-//            }
-//        });
-//    }
-//
-//    private void updateUI(weatherData weather){
-//        temperature.setText(weather.getmTemperature());
-//        weatherState.setText(weather.getmWeatherType());
-//    }
 }
