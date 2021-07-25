@@ -172,13 +172,13 @@ DetailsActivity extends AppCompatActivity {
                             weatherResponse.sys.country +
                             "\n" +
                             "Temperature: " +
-                            weatherResponse.main.temp +
+                            (weatherResponse.main.temp - 273.15) +
                             "\n" +
                             "Temperature(Min): " +
-                            weatherResponse.main.temp_min +
+                            (weatherResponse.main.temp_min - 273.15) +
                             "\n" +
                             "Temperature(Max): " +
-                            weatherResponse.main.temp_max +
+                            (weatherResponse.main.temp_max - 273.15) +
                             "\n" +
                             "Humidity: " +
                             weatherResponse.main.humidity +
