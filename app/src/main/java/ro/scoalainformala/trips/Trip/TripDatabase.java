@@ -14,7 +14,7 @@ import java.util.concurrent.Executors;
 
 import ro.scoalainformala.trips.R;
 
-@Database(entities = {Trip.class}, version = 6, exportSchema = false)
+@Database(entities = {Trip.class}, version = 7, exportSchema = false)
 public abstract class TripDatabase extends RoomDatabase {
 
     private static volatile TripDatabase INSTANCE;
@@ -47,7 +47,7 @@ public abstract class TripDatabase extends RoomDatabase {
                 TripDao dao = INSTANCE.getTripDao();
                 dao.deleteAll();
 
-                Trip trip = new Trip("Trip to Maldives", R.drawable.maldives_trip, "Maldives", "$1500", 4.5F, "Sea Side", "24.07.2021", "31.07.2021", true);
+                Trip trip = new Trip("Trip to Maldives", R.drawable.maldives_trip, "Male", "$1500", 4.5F, "Sea Side", "24.07.2021", "31.07.2021", true);
                 dao.insert(trip);
                 trip = new Trip("Meet Disneyland", R.drawable.disneyland_trip, "Paris", "$2000", 5F, "City Break", "12.05.2022", "17.05.2022", false);
                 dao.insert(trip);

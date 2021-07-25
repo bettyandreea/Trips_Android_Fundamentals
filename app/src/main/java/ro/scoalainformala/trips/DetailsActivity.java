@@ -1,6 +1,7 @@
 package ro.scoalainformala.trips;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -8,15 +9,22 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresPermission;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
 import com.android.volley.Header;
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.material.snackbar.Snackbar;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
@@ -26,6 +34,23 @@ import org.json.JSONObject;
 
 public class
 DetailsActivity extends AppCompatActivity {
+
+    // Location permission
+    @SuppressLint("MissingPermission")
+    private ActivityResultLauncher<String> requestPermissionLauncher =
+            registerForActivityResult(new ActivityResultContracts.RequestPermission(), isGranted -> {
+                if(isGranted) {
+                    // Permission is granted. Continue the action or workflow in your app.
+                    displayCurrentUserLocation();
+                } else {
+                    // Explain to the user that the feature is unavailable because the
+                    // feature requires a permission that the user has denied. At the
+                    // same time, respect the user's decision. Don't link to system
+                    // settings in an effort to convince the user to change their decision
+                    handlePermissionDenied();
+                }
+            });
+    private FusedLocationProviderClient fusedLocationClient;
 
     public static final String EXTRA_IMAGE_D = "ro.scoalainformala.trips.EXTRA_IMAGE_D";
     public static final String EXTRA_TITLE_D = "ro.scoalainformala.trips.EXTRA_TITLE_D";
@@ -85,12 +110,49 @@ DetailsActivity extends AppCompatActivity {
 
         String city = tripDestination.getText().toString();
 
-        if(city != null){
-            getWeatherForNewCity(city);
-        } else{
-            getWeatherForCurrentLocation();
-        }
+//        if(city != null){
+//            getWeatherForNewCity(city);
+//        } else{
+//            getWeatherForCurrentLocation();
+//        }
 
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
+
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // Request location permission
+            requestPermissionLauncher.launch(Manifest.permission.ACCESS_COARSE_LOCATION);
+        } else {
+            // We already have location
+            getWeatherForNewCity(city);
+            //displayCurrentUserLocation();
+        }
+    }
+
+    @RequiresPermission(Manifest.permission.ACCESS_COARSE_LOCATION)
+    private void displayCurrentUserLocation(){
+        fusedLocationClient.getLastLocation().addOnSuccessListener(this, location -> {
+            // Got last known location. In some rare situation this can be null.
+            if(location != null){
+                // Logic to handle location object
+                String latitude = String.valueOf(location.getLatitude());
+                String longitude = String.valueOf(location.getLongitude());
+
+                RequestParams params = new RequestParams();
+                params.put("lat", latitude);
+                params.put("lon", longitude);
+                params.put("appid", APP_ID);
+                doNetworking(params);
+
+            } else{
+                Toast.makeText(this, "Unknown location", Toast.LENGTH_LONG).show();
+            }
+        });
+    }
+
+    private void handlePermissionDenied(){
+        CoordinatorLayout coordinatorLayout = findViewById(R.id.coordinator);
+
+        Snackbar.make(coordinatorLayout, R.string.no_location_error, Snackbar.LENGTH_LONG).show();
     }
 
 //    @Override
@@ -113,69 +175,69 @@ DetailsActivity extends AppCompatActivity {
         doNetworking(params);
     }
 
-    private void getWeatherForCurrentLocation(){
-        mLocationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-        mLocationListener = new LocationListener() {
-            @Override
-            public void onLocationChanged(@NonNull Location location) {
+//    private void getWeatherForCurrentLocation(){
+//        mLocationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+//        mLocationListener = new LocationListener() {
+//            @Override
+//            public void onLocationChanged(@NonNull Location location) {
+//
+//                String latitude = String.valueOf(location.getLatitude());
+//                String longitude = String.valueOf(location.getLongitude());
+//
+//                RequestParams params = new RequestParams();
+//                params.put("lat", latitude);
+//                params.put("lon", longitude);
+//                params.put("appid", APP_ID);
+//                doNetworking(params);
+//            }
+//            @Override
+//            public void onStatusChanged(String provider, int status, Bundle extras){
+//
+//            }
+//
+//            @Override
+//            public void onProviderEnabled(String provider) {
+//
+//            }
+//
+//            @Override
+//            public void onProviderDisabled(String provider) {
+//                //not able to get location
+//            }
+//        };
+//
+//        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+//            // TODO: Consider calling
+//            //    ActivityCompat#requestPermissions
+//            // here to request the missing permissions, and then overriding
+//            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+//            //                                          int[] grantResults)
+//            // to handle the case where the user grants the permission. See the documentation
+//            // for ActivityCompat#requestPermissions for more details.
+//            ActivityCompat.requestPermissions(this,new String[]{Manifest.permission.ACCESS_FINE_LOCATION},REQUEST_CODE);
+//            return;
+//        }
+//        mLocationManager.requestLocationUpdates(Location_Provider, MIN_TIME, MIN_DISTANCE, mLocationListener);
+//    }
 
-                String latitude = String.valueOf(location.getLatitude());
-                String longitude = String.valueOf(location.getLongitude());
-
-                RequestParams params = new RequestParams();
-                params.put("lat", latitude);
-                params.put("lon", longitude);
-                params.put("appid", APP_ID);
-                doNetworking(params);
-            }
-            @Override
-            public void onStatusChanged(String provider, int status, Bundle extras){
-
-            }
-
-            @Override
-            public void onProviderEnabled(String provider) {
-
-            }
-
-            @Override
-            public void onProviderDisabled(String provider) {
-                //not able to get location
-            }
-        };
-
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            // TODO: Consider calling
-            //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
-            ActivityCompat.requestPermissions(this,new String[]{Manifest.permission.ACCESS_FINE_LOCATION},REQUEST_CODE);
-            return;
-        }
-        mLocationManager.requestLocationUpdates(Location_Provider, MIN_TIME, MIN_DISTANCE, mLocationListener);
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-
-
-        if(requestCode==REQUEST_CODE)
-        {
-            if(grantResults.length>0 && grantResults[0]==PackageManager.PERMISSION_GRANTED)
-            {
-                Toast.makeText(DetailsActivity.this,"Locationget Succesffully",Toast.LENGTH_SHORT).show();
-                getWeatherForCurrentLocation();
-            }
-            else
-            {
-                //user denied the permission
-            }
-        }
-    }
+//    @Override
+//    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+//        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+//
+//
+//        if(requestCode==REQUEST_CODE)
+//        {
+//            if(grantResults.length>0 && grantResults[0]==PackageManager.PERMISSION_GRANTED)
+//            {
+//                Toast.makeText(DetailsActivity.this,"Location got successfully",Toast.LENGTH_SHORT).show();
+//                getWeatherForCurrentLocation();
+//            }
+//            else
+//            {
+//                //user denied the permission
+//            }
+//        }
+//    }
 
     private  void doNetworking(RequestParams params)
     {
@@ -183,7 +245,7 @@ DetailsActivity extends AppCompatActivity {
         client.get(WEATHER_URL,params,new JsonHttpResponseHandler(){
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
 
-                Toast.makeText(DetailsActivity.this,"Data Get Success",Toast.LENGTH_SHORT).show();
+                Toast.makeText(DetailsActivity.this,"Data got Success",Toast.LENGTH_SHORT).show();
 
                 weatherData weatherD = weatherData.fromJson(response);
                 updateUI(weatherD);
@@ -203,12 +265,12 @@ DetailsActivity extends AppCompatActivity {
         weatherState.setText(weather.getmWeatherType());
     }
 
-    @Override
-    protected void onPause() {
-        super.onPause();
-        if(mLocationManager!=null)
-        {
-            mLocationManager.removeUpdates(mLocationListener);
-        }
-    }
+//    @Override
+//    protected void onPause() {
+//        super.onPause();
+//        if(mLocationManager!=null)
+//        {
+//            mLocationManager.removeUpdates(mLocationListener);
+//        }
+//    }
 }

@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    xmlns:tools="http://schemas.android.com/tools"
     android:padding="16dp">
 
     <TextView
@@ -13,34 +13,46 @@
         android:textAppearance="?android:textAppearanceLarge"
         android:textColor="@color/black"
         android:textSize="32sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/details_trip_destination"
         tools:text="Trip to Maldives" />
+
+    <!--    <RatingBar-->
+    <!--        android:id="@+id/details_trip_rating"-->
+    <!--        android:layout_width="wrap_content"-->
+    <!--        android:layout_height="wrap_content"-->
+    <!--        style="@style/Widget.AppCompat.RatingBar.Small"-->
+    <!--        android:isIndicator="true"-->
+    <!--        android:progressTint="#F7C501"-->
+    <!--        android:numStars="10"-->
+    <!--        android:stepSize="0.1"-->
+    <!--        tools:rating="4.5" />-->
 
     <TextView
         android:id="@+id/details_trip_destination"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:textAppearance="?android:textAppearanceMedium"
         android:textColor="@color/black"
         android:textSize="24sp"
-        android:textAppearance="?android:textAppearanceMedium"
+        app:layout_constraintBottom_toTopOf="@id/details_trip_price"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/details_trip_name"
         tools:text="Destination: Maldives" />
-
-<!--    <RatingBar-->
-<!--        android:id="@+id/details_trip_rating"-->
-<!--        android:layout_width="wrap_content"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        style="@style/Widget.AppCompat.RatingBar.Small"-->
-<!--        android:isIndicator="true"-->
-<!--        android:progressTint="#F7C501"-->
-<!--        android:numStars="10"-->
-<!--        android:stepSize="0.1"-->
-<!--        tools:rating="4.5" />-->
 
     <TextView
         android:id="@+id/details_trip_price"
         android:layout_width="wrap_content"
-        android:textColor="@color/black"
         android:layout_height="wrap_content"
+        android:textColor="@color/black"
         android:textSize="24sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/details_trip_destination"
+        app:layout_constraintBottom_toTopOf="@id/details_trip_type"
         tools:text="Price: $1500" />
 
     <TextView
@@ -48,36 +60,56 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textSize="24sp"
-        tools:text="Type: Sea Side"/>
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/details_trip_price"
+        app:layout_constraintBottom_toTopOf="@id/details_start_date"
+        tools:text="Type: Sea Side" />
 
     <TextView
         android:id="@+id/details_start_date"
         android:layout_width="match_parent"
-        android:textColor="@color/black"
         android:layout_height="wrap_content"
-        tools:text="Start date: 23.07.2021"/>
+        android:textColor="@color/black"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/details_trip_type"
+        app:layout_constraintBottom_toTopOf="@id/details_end_date"
+        tools:text="Start date: 23.07.2021" />
 
     <TextView
         android:id="@+id/details_end_date"
-        android:textColor="@color/black"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        tools:text="End date: 31.07.2021"/>
+        android:textColor="@color/black"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/details_start_date"
+        app:layout_constraintBottom_toTopOf="@id/details_weather_state"
+        tools:text="End date: 31.07.2021" />
 
     <TextView
         android:id="@+id/details_weather_state"
-        android:textColor="@color/black"
-        android:layout_marginTop="16dp"
-        android:textSize="32dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        tools:text="Rainy"/>
+        android:layout_marginTop="16dp"
+        android:textColor="@color/black"
+        android:textSize="32dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/details_end_date"
+        app:layout_constraintBottom_toTopOf="@id/details_weather_temperature"
+        tools:text="Rainy" />
 
     <TextView
         android:id="@+id/details_weather_temperature"
-        android:textColor="@color/black"
-        android:textSize="32dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        tools:text="32C"/>
-</LinearLayout>
+        android:textColor="@color/black"
+        android:textSize="32dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/details_weather_state"
+        tools:text="32C" />
+</androidx.constraintlayout.widget.ConstraintLayout>
