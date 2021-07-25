@@ -27,8 +27,6 @@
 
         <activity android:name=".FavouritesActivity"/>
 
-        <activity android:name=".AboutUs"/>
-
 
         <activity
             android:name=".SplashScreenActivity"

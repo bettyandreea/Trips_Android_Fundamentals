@@ -21,6 +21,8 @@ import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
@@ -95,8 +97,7 @@ public class HomeActivity extends AppCompatActivity{
                         break;
 
                     case R.id.nav_about_us:
-                        Intent about = new Intent(HomeActivity.this, AboutUs.class);
-                        startActivity(about);
+                        loadFragment(new aboutFragment());
 //                        Toast.makeText(MainActivity.this, "About Us", Toast.LENGTH_LONG);
                         break;
 
@@ -201,6 +202,12 @@ public class HomeActivity extends AppCompatActivity{
                 startActivity(intent);
             }
         });
+    }
+
+    public void loadFragment(Fragment fragment) {
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        transaction.replace(id.frame, fragment);
+        transaction.commit();
     }
 
     @Override
