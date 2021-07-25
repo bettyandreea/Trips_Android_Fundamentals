@@ -66,16 +66,23 @@
             android:textSize="24sp"
             tools:text="$1500" />
 
-        <Button
+<!--        <Button-->
+<!--            android:id="@+id/trip_check_favorites"-->
+<!--            android:layout_width="32dp"-->
+<!--            android:layout_height="32dp"-->
+<!--            android:layout_margin="16dp"-->
+<!--            android:clickable="true"-->
+<!--            android:layout_alignParentEnd="true"-->
+<!--            android:backgroundTint="@color/red"-->
+<!--            android:background="@drawable/custom_checkbox"-->
+<!--            android:layout_alignTop="@id/trip_name" />-->
+
+        <CheckBox
             android:id="@+id/trip_check_favorites"
             android:layout_width="32dp"
             android:layout_height="32dp"
-            android:layout_margin="16dp"
-            android:clickable="true"
-            android:layout_alignParentEnd="true"
-            android:backgroundTint="@color/red"
-            android:background="@drawable/custom_checkbox"
-            android:layout_alignTop="@id/trip_name" />
+            android:button="@drawable/custom_checkbox"
+            android:layout_alignParentRight="true"/>
 
     </RelativeLayout>
 

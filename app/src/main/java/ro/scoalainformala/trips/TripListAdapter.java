@@ -6,11 +6,15 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.bumptech.glide.Glide;
 
 import java.io.Serializable;
 import java.util.List;
@@ -26,6 +30,7 @@ public class TripListAdapter extends RecyclerView.Adapter<TripListAdapter.TripVi
     public interface OnItemClickListener {
         void onItemClick(Trip trip);
         void onLongItemClick(Trip trip);
+        void OnFavouriteItemClick(Trip trip);
     }
 
     public void setOnItemClickListener(OnItemClickListener listener) {
@@ -47,7 +52,10 @@ public class TripListAdapter extends RecyclerView.Adapter<TripListAdapter.TripVi
         if (mTrips != null) {
             Trip current = mTrips.get(position);
             holder.tripName.setText(current.getTitle());
-            holder.tripImage.setImageResource(current.getImage());
+            Glide.with(holder.tripImage)
+                    .load(current.getImage())
+                    .into(holder.tripImage);
+            //holder.tripImage.setImageResource(current.getImage());
             holder.destination.setText(current.getDestination());
             holder.price.setText(current.getPrice());
             holder.rating.setRating(current.getRating());
@@ -90,7 +98,7 @@ public class TripListAdapter extends RecyclerView.Adapter<TripListAdapter.TripVi
             destination = itemView.findViewById(R.id.trip_destination);
             price = itemView.findViewById(R.id.trip_price);
             rating = itemView.findViewById(R.id.trip_rating);
-            //checkBox = itemView.findViewById(R.id.trip_check_favorites);
+            Button favourite = itemView.findViewById(R.id.trip_check_favorites);
 
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -108,6 +116,16 @@ public class TripListAdapter extends RecyclerView.Adapter<TripListAdapter.TripVi
                     if(listener != null && position != RecyclerView.NO_POSITION)
                         listener.onLongItemClick(mTrips.get(position));
                     return false;
+                }
+            });
+
+            favourite.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    int position = getAdapterPosition();
+                    if(listener != null && position != RecyclerView.NO_POSITION){
+                        listener.OnFavouriteItemClick(mTrips.get(position));
+                    }
                 }
             });
         }

@@ -24,6 +24,6 @@ public interface TripDao {
     @Query("SELECT * FROM trip_table ORDER BY title ASC")
     LiveData<List<Trip>> getAlphabetizedTrips();
 
-    @Query("SELECT * FROM trip_table WHERE isFavourite='true'")
+    @Query("SELECT * FROM trip_table WHERE isFavourite='TRUE'")
     LiveData<List<Trip>> getAllFavouriteTrips();
 }

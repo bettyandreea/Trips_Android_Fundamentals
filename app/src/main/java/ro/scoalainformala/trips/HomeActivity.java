@@ -9,6 +9,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
@@ -53,7 +54,7 @@ public class HomeActivity extends AppCompatActivity{
     private TripViewModel tripViewModel;
 
     private Button favButton;
-    private Button setFavTrip;
+    private CheckBox setFavTrip;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -128,12 +129,6 @@ public class HomeActivity extends AppCompatActivity{
         });
 
         setFavTrip = findViewById(R.id.trip_check_favorites);
-//        setFavTrip.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                // add trip to favTrips list
-//            }
-//        });
 
         RecyclerView recyclerView = findViewById(id.recycler_view);
         TripListAdapter adapter = new TripListAdapter(this);
@@ -160,6 +155,7 @@ public class HomeActivity extends AppCompatActivity{
                 intent.putExtra(DetailsActivity.EXTRA_TYPE_D, trip.getType());
                 intent.putExtra(DetailsActivity.EXTRA_START_DATE_D, trip.getStartDate());
                 intent.putExtra(DetailsActivity.EXTRA_END_DATE_D, trip.getEndDate());
+                intent.putExtra(DetailsActivity.EXTRA_IS_FAVOURITE_D, trip.isFavourite());
                 startActivity(intent);
             }
 
@@ -177,6 +173,14 @@ public class HomeActivity extends AppCompatActivity{
                 intent.putExtra(AddEditTripActivity.EXTRA_END_DATE, trip.getEndDate());
                 intent.putExtra(AddEditTripActivity.EXTRA_IS_FAVOURITE, trip.isFavourite());
                 startActivityForResult(intent, EDIT_TRIP_ACTIVITY_REQUEST_CODE);
+            }
+
+            @Override
+            public void OnFavouriteItemClick(Trip trip){
+                Trip updatedTrip = trip;
+                updatedTrip.setIsFavourite(true);
+                tripViewModel.update(trip);
+                Toast.makeText(HomeActivity.this, "Trip updated", Toast.LENGTH_SHORT).show();
             }
         });
 

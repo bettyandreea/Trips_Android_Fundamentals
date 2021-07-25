@@ -90,6 +90,10 @@ public class Trip {
         return isFavourite;
     }
 
+    public void setIsFavourite(Boolean isFavourite) {
+        this.isFavourite = isFavourite;
+    }
+
     public int getImage() {
         return image;
     }

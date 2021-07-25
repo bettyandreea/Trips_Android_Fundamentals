@@ -14,7 +14,7 @@ import java.util.concurrent.Executors;
 
 import ro.scoalainformala.trips.R;
 
-@Database(entities = {Trip.class}, version = 7, exportSchema = false)
+@Database(entities = {Trip.class}, version = 6, exportSchema = false)
 public abstract class TripDatabase extends RoomDatabase {
 
     private static volatile TripDatabase INSTANCE;
