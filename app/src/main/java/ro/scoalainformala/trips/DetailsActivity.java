@@ -151,19 +151,19 @@ DetailsActivity extends AppCompatActivity {
                             weatherResponse.sys.country +
                             "\n" +
                             "Temperature: " +
-                            (weatherResponse.main.temp - 273.15) +
-                            "\n" +
+                            Math.round(weatherResponse.main.temp - 273.15) +
+                            "°C\n" +
                             "Temperature(Min): " +
-                            (weatherResponse.main.temp_min - 273.15) +
-                            "\n" +
+                            Math.round(weatherResponse.main.temp_min - 273.15) +
+                            "°C\n" +
                             "Temperature(Max): " +
-                            (weatherResponse.main.temp_max - 273.15) +
-                            "\n" +
+                            Math.round(weatherResponse.main.temp_max - 273.15) +
+                            "°C\n" +
                             "Humidity: " +
-                            weatherResponse.main.humidity +
+                            Math.round(weatherResponse.main.humidity) +
                             "\n" +
                             "Pressure: " +
-                            weatherResponse.main.pressure;
+                            Math.round(weatherResponse.main.pressure);
 
                     weather.setText(stringBuilder);
                 }

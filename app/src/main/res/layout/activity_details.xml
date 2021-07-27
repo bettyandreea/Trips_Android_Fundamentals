@@ -41,7 +41,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/details_trip_name"
-        tools:text="Destination: Maldives" />
+        tools:text="Destination: Male" />
 
     <TextView
         android:id="@+id/details_trip_price"
@@ -49,7 +49,6 @@
         android:layout_height="wrap_content"
         android:textColor="@color/black"
         android:textSize="24sp"
-        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/details_trip_destination"
         app:layout_constraintBottom_toTopOf="@id/details_trip_type"
