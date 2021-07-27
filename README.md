@@ -23,3 +23,11 @@ Application to keep the evidence of places you have visited
 - Java
 - Room database
 
+## Screenshots
+![](https://github.com/bettyandreea/Trips_Android_Fundamentals/blob/master/images/main_screen.png)
+![](https://github.com/bettyandreea/Trips_Android_Fundamentals/blob/master/images/add_screen.png)]
+![](https://github.com/bettyandreea/Trips_Android_Fundamentals/blob/master/images/edit_screen.png)
+![](https://github.com/bettyandreea/Trips_Android_Fundamentals/blob/master/images/nav_drawer_screen.png)
+
+# Authors
+Beatrice Andreea Vizuroiu
