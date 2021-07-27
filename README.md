@@ -8,7 +8,7 @@ Application to keep the evidence of places you have visited
 - Splash screen when app is opened
 - Add/remove trip to/from favourites
 - Long click on trip opens the edit screen of that trip to change its details (such as rating, price, etc)
-- Short click on trip opens details screen for that trip that desplays:
+- Short click on trip opens details screen for that trip that displays:
   - title
   - destination city, country code
   - price in USD
