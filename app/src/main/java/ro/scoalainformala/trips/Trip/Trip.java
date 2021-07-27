@@ -36,6 +36,7 @@ public class Trip {
     @ColumnInfo(name = "end_date")
     private String endDate;
 
+    @ColumnInfo(name = "isFavourite")
     private Boolean isFavourite;
 
     public Trip(String title, int image, String destination, String price, float rating, String type, String startDate, String endDate, Boolean isFavourite) {

@@ -73,7 +73,6 @@ DetailsActivity extends AppCompatActivity {
     private TextView tripStartDate;
     private TextView tripEndDate;
     private TextView weather;
-    private TextView temperature;
 
 
     @Override
@@ -89,7 +88,6 @@ DetailsActivity extends AppCompatActivity {
         tripStartDate = findViewById(R.id.details_start_date);
         tripEndDate = findViewById(R.id.details_end_date);
         weather = findViewById(R.id.details_weather_state);
-        temperature = findViewById(R.id.details_weather_temperature);
 
         Intent intent = getIntent();
 

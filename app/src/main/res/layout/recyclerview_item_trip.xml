@@ -82,6 +82,7 @@
             android:layout_width="32dp"
             android:layout_height="32dp"
             android:button="@drawable/custom_checkbox"
+            android:backgroundTint="@color/red"
             android:layout_alignParentRight="true"/>
 
     </RelativeLayout>

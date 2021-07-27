@@ -90,26 +90,13 @@
 
     <TextView
         android:id="@+id/details_weather_state"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:textColor="@color/black"
-        android:textSize="32dp"
+        android:layout_marginTop="28dp"
+        android:textSize="24sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/details_end_date"
-        app:layout_constraintBottom_toTopOf="@id/details_weather_temperature"
         tools:text="Rainy" />
 
-    <TextView
-        android:id="@+id/details_weather_temperature"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textColor="@color/black"
-        android:textSize="32dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/details_weather_state"
-        tools:text="32C" />
 </androidx.constraintlayout.widget.ConstraintLayout>

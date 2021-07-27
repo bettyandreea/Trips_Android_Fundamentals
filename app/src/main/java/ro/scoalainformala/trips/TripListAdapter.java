@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
@@ -59,12 +60,14 @@ public class TripListAdapter extends RecyclerView.Adapter<TripListAdapter.TripVi
             holder.destination.setText(current.getDestination());
             holder.price.setText(current.getPrice());
             holder.rating.setRating(current.getRating());
+            holder.favourite.setChecked(current.isFavourite());
         } else {
             holder.tripName.setText("Nothing");
             holder.tripImage.setImageResource(R.drawable.blank);
             holder.destination.setText("Nothing");
             holder.price.setText("$0");
             holder.rating.setRating(0F);
+            holder.favourite.setChecked(false);
         }
     }
 
@@ -90,6 +93,7 @@ public class TripListAdapter extends RecyclerView.Adapter<TripListAdapter.TripVi
         private final TextView destination;
         private final TextView price;
         private final RatingBar rating;
+        private final CheckBox favourite;
 
         private TripViewHolder(View itemView) {
             super(itemView);
@@ -98,7 +102,7 @@ public class TripListAdapter extends RecyclerView.Adapter<TripListAdapter.TripVi
             destination = itemView.findViewById(R.id.trip_destination);
             price = itemView.findViewById(R.id.trip_price);
             rating = itemView.findViewById(R.id.trip_rating);
-            Button favourite = itemView.findViewById(R.id.trip_check_favorites);
+            /*Button*/ favourite = itemView.findViewById(R.id.trip_check_favorites);
 
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -125,6 +129,7 @@ public class TripListAdapter extends RecyclerView.Adapter<TripListAdapter.TripVi
                     int position = getAdapterPosition();
                     if(listener != null && position != RecyclerView.NO_POSITION){
                         listener.OnFavouriteItemClick(mTrips.get(position));
+                        favourite.setChecked(mTrips.get(position).isFavourite());
                     }
                 }
             });

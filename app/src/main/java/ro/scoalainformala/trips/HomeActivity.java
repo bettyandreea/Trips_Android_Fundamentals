@@ -10,6 +10,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
@@ -57,6 +58,7 @@ public class HomeActivity extends AppCompatActivity{
 
     private Button favButton;
     private CheckBox setFavTrip;
+    int clickCount = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -178,10 +180,16 @@ public class HomeActivity extends AppCompatActivity{
 
             @Override
             public void OnFavouriteItemClick(Trip trip){
-                Trip updatedTrip = trip;
-                updatedTrip.setIsFavourite(true);
-                tripViewModel.update(trip);
-                Toast.makeText(HomeActivity.this, "Trip updated", Toast.LENGTH_SHORT).show();
+                clickCount++;
+                if (clickCount % 2 == 0){
+                    trip.setIsFavourite(false);
+                    tripViewModel.update(trip);
+                    Toast.makeText(HomeActivity.this, "Trip updated", Toast.LENGTH_SHORT).show();
+                } else {
+                    trip.setIsFavourite(true);
+                    tripViewModel.update(trip);
+                    Toast.makeText(HomeActivity.this, "Trip updated", Toast.LENGTH_SHORT).show();
+                }
             }
         });
 
