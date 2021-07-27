@@ -75,8 +75,8 @@ public class HomeActivity extends AppCompatActivity{
         TextView headerName = headerView.findViewById(R.id.user_name);
         TextView headerMail = headerView.findViewById(R.id.user_email);
         headerImage.setImageResource(R.drawable.ic_header_travel);
-        headerName.setText("Beatrice Vizuroiu");
-        headerMail.setText("b.vizuroiu@student.tudelft.nl");
+        headerName.setText("User Name");
+        headerMail.setText("user.name@email.com");
 
         // Navigation Drawer Menu
         toggle = new ActionBarDrawerToggle(this, drawerLayout, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
