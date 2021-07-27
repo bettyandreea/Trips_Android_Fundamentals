@@ -183,13 +183,11 @@ public class HomeActivity extends AppCompatActivity{
                 clickCount++;
                 if (clickCount % 2 == 0){
                     trip.setIsFavourite(false);
-                    tripViewModel.update(trip);
-                    Toast.makeText(HomeActivity.this, "Trip updated", Toast.LENGTH_SHORT).show();
                 } else {
                     trip.setIsFavourite(true);
-                    tripViewModel.update(trip);
-                    Toast.makeText(HomeActivity.this, "Trip updated", Toast.LENGTH_SHORT).show();
                 }
+                tripViewModel.update(trip);
+                Toast.makeText(HomeActivity.this, "Trip updated", Toast.LENGTH_SHORT).show();
             }
         });
 

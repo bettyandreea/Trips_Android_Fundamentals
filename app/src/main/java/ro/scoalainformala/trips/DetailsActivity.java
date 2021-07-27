@@ -99,6 +99,8 @@ DetailsActivity extends AppCompatActivity {
         tripStartDate.setText(intent.getStringExtra(EXTRA_START_DATE_D));
         tripEndDate.setText(intent.getStringExtra(EXTRA_END_DATE_D));
 
+
+        // city name to get weather in
         city = tripDestination.getText().toString();
 
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
@@ -133,6 +135,7 @@ DetailsActivity extends AppCompatActivity {
         Snackbar.make(coordinatorLayout, R.string.no_location_error, Snackbar.LENGTH_LONG).show();
     }
 
+    // get weather in given city
     private void getCityData() {
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(WEATHER_URL)
@@ -176,6 +179,7 @@ DetailsActivity extends AppCompatActivity {
         });
     }
 
+    // get weather in current location
     private void getCurrentData() {
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(WEATHER_URL)
