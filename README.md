@@ -31,6 +31,3 @@ Application to keep the evidence of places you have visited
 
 # Authors
 Beatrice Andreea Vizuroiu
-
-#### What still needs to be added / improved
-- when add / edit trip add image from gallery or take a new picture
