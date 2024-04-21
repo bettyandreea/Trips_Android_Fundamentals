@@ -42,31 +42,31 @@ public class FavouritesActivity extends AppCompatActivity {
             public void onItemClick(Trip trip) {
                 Intent intent = new Intent(FavouritesActivity.this, DetailsActivity.class);
                 // put details via intent
-                intent.putExtra(DetailsActivity.EXTRA_IMAGE_D, trip.getImage());
-                intent.putExtra(DetailsActivity.EXTRA_TITLE_D, trip.getTitle());
-                intent.putExtra(DetailsActivity.EXTRA_DESTINATION_D, trip.getDestination());
-                intent.putExtra(DetailsActivity.EXTRA_PRICE_D, trip.getPrice());
-                intent.putExtra(DetailsActivity.EXTRA_RATING_D, trip.getRating());
-                intent.putExtra(DetailsActivity.EXTRA_TYPE_D, trip.getType());
-                intent.putExtra(DetailsActivity.EXTRA_START_DATE_D, trip.getStartDate());
-                intent.putExtra(DetailsActivity.EXTRA_END_DATE_D, trip.getEndDate());
-                intent.putExtra(DetailsActivity.EXTRA_IS_FAVOURITE_D, trip.isFavourite());
+                intent.putExtra(DetailsActivity.EXTRA_IMAGE_D, trip.image);
+                intent.putExtra(DetailsActivity.EXTRA_TITLE_D, trip.title);
+                intent.putExtra(DetailsActivity.EXTRA_DESTINATION_D, trip.destination);
+                intent.putExtra(DetailsActivity.EXTRA_PRICE_D, trip.price);
+                intent.putExtra(DetailsActivity.EXTRA_RATING_D, trip.rating);
+                intent.putExtra(DetailsActivity.EXTRA_TYPE_D, trip.type);
+                intent.putExtra(DetailsActivity.EXTRA_START_DATE_D, trip.startDate);
+                intent.putExtra(DetailsActivity.EXTRA_END_DATE_D, trip.endDate);
+                intent.putExtra(DetailsActivity.EXTRA_IS_FAVOURITE_D, trip.isFavourite);
                 startActivity(intent);
             }
 
             @Override
             public void onLongItemClick(Trip trip) {
                 Intent intent = new Intent(FavouritesActivity.this, AddEditTripActivity.class);
-                intent.putExtra(AddEditTripActivity.EXTRA_ID, trip.getId());
-                intent.putExtra(AddEditTripActivity.EXTRA_TITLE, trip.getTitle());
-                intent.putExtra(AddEditTripActivity.EXTRA_IMAGE, trip.getImage());
-                intent.putExtra(AddEditTripActivity.EXTRA_DESTINATION, trip.getDestination());
-                intent.putExtra(AddEditTripActivity.EXTRA_PRICE, trip.getPrice());
-                intent.putExtra(AddEditTripActivity.EXTRA_TYPE, trip.getType());
-                intent.putExtra(AddEditTripActivity.EXTRA_RATING, trip.getRating());
-                intent.putExtra(AddEditTripActivity.EXTRA_START_DATE, trip.getStartDate());
-                intent.putExtra(AddEditTripActivity.EXTRA_END_DATE, trip.getEndDate());
-                intent.putExtra(AddEditTripActivity.EXTRA_IS_FAVOURITE, trip.isFavourite());
+                intent.putExtra(AddEditTripActivity.EXTRA_ID, trip.id);
+                intent.putExtra(AddEditTripActivity.EXTRA_TITLE, trip.title);
+                intent.putExtra(AddEditTripActivity.EXTRA_IMAGE, trip.image);
+                intent.putExtra(AddEditTripActivity.EXTRA_DESTINATION, trip.destination);
+                intent.putExtra(AddEditTripActivity.EXTRA_PRICE, trip.price);
+                intent.putExtra(AddEditTripActivity.EXTRA_TYPE, trip.type);
+                intent.putExtra(AddEditTripActivity.EXTRA_RATING, trip.rating);
+                intent.putExtra(AddEditTripActivity.EXTRA_START_DATE, trip.startDate);
+                intent.putExtra(AddEditTripActivity.EXTRA_END_DATE, trip.endDate);
+                intent.putExtra(AddEditTripActivity.EXTRA_IS_FAVOURITE, trip.isFavourite);
                 startActivityForResult(intent, HomeActivity.EDIT_TRIP_ACTIVITY_REQUEST_CODE);
             }
 
@@ -74,9 +74,9 @@ public class FavouritesActivity extends AppCompatActivity {
             public void OnFavouriteItemClick(Trip trip){
                 clickCount++;
                 if (clickCount % 2 == 0){
-                    trip.setIsFavourite(false);
+                    trip.isFavourite = false;
                 } else {
-                    trip.setIsFavourite(true);
+                    trip.isFavourite = true;
                 }
                 tripViewModel.update(trip);
                 Toast.makeText(FavouritesActivity.this, "Trip updated", Toast.LENGTH_SHORT).show();

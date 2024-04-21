@@ -52,15 +52,15 @@ public class TripListAdapter extends RecyclerView.Adapter<TripListAdapter.TripVi
     public void onBindViewHolder(TripListAdapter.TripViewHolder holder, int position) {
         if (mTrips != null) {
             Trip current = mTrips.get(position);
-            holder.tripName.setText(current.getTitle());
+            holder.tripName.setText(current.title);
             Glide.with(holder.tripImage)
-                    .load(current.getImage())
+                    .load(current.image)
                     .into(holder.tripImage);
             //holder.tripImage.setImageResource(current.getImage());
-            holder.destination.setText(current.getDestination());
-            holder.price.setText(current.getPrice());
-            holder.rating.setRating(current.getRating());
-            holder.favourite.setChecked(current.isFavourite());
+            holder.destination.setText(current.destination);
+            holder.price.setText(current.price);
+            holder.rating.setRating(current.rating);
+            holder.favourite.setChecked(current.isFavourite);
         } else {
             holder.tripName.setText("Nothing");
             holder.tripImage.setImageResource(R.drawable.blank);
@@ -129,7 +129,7 @@ public class TripListAdapter extends RecyclerView.Adapter<TripListAdapter.TripVi
                     int position = getAdapterPosition();
                     if(listener != null && position != RecyclerView.NO_POSITION){
                         listener.OnFavouriteItemClick(mTrips.get(position));
-                        favourite.setChecked(mTrips.get(position).isFavourite());
+                        favourite.setChecked(mTrips.get(position).isFavourite);
                     }
                 }
             });
