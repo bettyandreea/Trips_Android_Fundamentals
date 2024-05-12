@@ -18,7 +18,7 @@ abstract class TripDatabase : RoomDatabase() {
         private var INSTANCE: TripDatabase? = null
         private const val NUMBER_OF_THREADS = 4
         val EXECUTOR = Executors.newFixedThreadPool(NUMBER_OF_THREADS)
-        fun getInstance(context: Context?): TripDatabase? {
+        fun getInstance(context: Context?): TripDatabase {
             if (INSTANCE == null) {
                 synchronized(TripDatabase::class.java) {
                     if (INSTANCE == null) {
@@ -29,7 +29,7 @@ abstract class TripDatabase : RoomDatabase() {
                     }
                 }
             }
-            return INSTANCE
+            return INSTANCE!!
         }
 
         private val ROOM_DATABASE_CALLBACK: Callback = object : Callback() {

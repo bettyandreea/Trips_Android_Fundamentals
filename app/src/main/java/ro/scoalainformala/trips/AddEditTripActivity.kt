@@ -1,123 +1,127 @@
-package ro.scoalainformala.trips;
+package ro.scoalainformala.trips
 
-import android.content.Intent;
-import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
-import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.Toast;
+import android.content.Intent
+import android.os.Bundle
+import android.view.Menu
+import android.view.MenuItem
+import android.widget.EditText
+import android.widget.ImageView
+import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 
-import androidx.appcompat.app.AppCompatActivity;
+class AddEditTripActivity : AppCompatActivity() {
+    private var editImage: ImageView? = null
+    private var editTitle: EditText? = null
+    private var editDestination: EditText? = null
+    private var editPrice: EditText? = null
+    private var editRating: EditText? = null
+    private var editType: EditText? = null
+    private var editStartDate: EditText? = null
+    private var editEndDate: EditText? = null
 
-public class AddEditTripActivity extends AppCompatActivity {
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_add_edit_trip)
 
-    public static final String EXTRA_IMAGE = "ro.scoalainformala.trips.EXTRA_IMAGE";
-    public static final String EXTRA_ID = "ro.scoalainformala.trips.EXTRA_ID";
-    public static final String EXTRA_TITLE = "ro.scoalainformala.trips.EXTRA_TITLE";
-    public static final String EXTRA_DESTINATION = "ro.scoalainformala.trips.EXTRA_DESTINATION";
-    public static final String EXTRA_PRICE = "ro.scoalainformala.trips.EXTRA_PRICE";
-    public static final String EXTRA_RATING = "ro.scoalainformala.trips.EXTRA_RATING";
-    public static final String EXTRA_TYPE = "ro.scoalainformala.trips.EXTRA_TYPE";
-    public static final String EXTRA_START_DATE = "ro.scoalainformala.trips.EXTRA_START_DATE";
-    public static final String EXTRA_END_DATE = "ro.scoalainformala.trips.EXTRA_END_DATE";
-    public static final String EXTRA_IS_FAVOURITE = "ro.scoalainformala.trips.EXTRA_IS_FAVOURITE";
+        editImage = findViewById(R.id.add_edit_image)
+        editTitle = findViewById(R.id.add_edit_title)
+        editDestination = findViewById(R.id.add_edit_destination)
+        editPrice = findViewById(R.id.add_edit_price)
+        editRating = findViewById(R.id.add_edit_rating)
+        editType = findViewById(R.id.add_edit_type)
+        editStartDate = findViewById(R.id.add_edit_start_date)
+        editEndDate = findViewById(R.id.add_edit_end_date)
 
-    private ImageView editImage;
-    private EditText editTitle;
-    private EditText editDestination;
-    private EditText editPrice;
-    private EditText editRating;
-    private EditText editType;
-    private EditText editStartDate;
-    private EditText editEndDate;
+        supportActionBar!!.setHomeAsUpIndicator(R.drawable.ic_close)
+        val intent = intent
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_add_edit_trip);
-
-        editImage = findViewById(R.id.add_edit_image);
-        editTitle = findViewById(R.id.add_edit_title);
-        editDestination = findViewById(R.id.add_edit_destination);
-        editPrice = findViewById(R.id.add_edit_price);
-        editRating = findViewById(R.id.add_edit_rating);
-        editType = findViewById(R.id.add_edit_type);
-        editStartDate = findViewById(R.id.add_edit_start_date);
-        editEndDate = findViewById(R.id.add_edit_end_date);
-
-        getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_close);
-        Intent intent = getIntent();
-
-        if(intent.hasExtra(EXTRA_ID)){
-            setTitle("Edit Trip");
-            editImage.setImageResource(R.drawable.blank);
-            editTitle.setText(intent.getStringExtra(EXTRA_TITLE));
-            editDestination.setText(intent.getStringExtra(EXTRA_DESTINATION));
-            editPrice.setText(intent.getStringExtra(EXTRA_PRICE));
-            editRating.setText(intent.getStringExtra(EXTRA_RATING));
-            editType.setText(intent.getStringExtra(EXTRA_TYPE));
-            editStartDate.setText(intent.getStringExtra(EXTRA_START_DATE));
-            editEndDate.setText(intent.getStringExtra(EXTRA_END_DATE));
+        if (intent.hasExtra(EXTRA_ID)) {
+            title = "Edit Trip"
+            with(editImage) { this!!.setImageResource(R.drawable.blank) } // where I had to add a random blank image to have an image all the time
+            with(editTitle) { this!!.setText(intent.getStringExtra(EXTRA_TITLE)) }
+            with(editDestination) { this!!.setText(intent.getStringExtra(EXTRA_DESTINATION)) }
+            with(editPrice) { this!!.setText(intent.getStringExtra(EXTRA_PRICE)) }
+            with(editRating) { this!!.setText(intent.getStringExtra(EXTRA_RATING)) }
+            with(editType) { this!!.setText(intent.getStringExtra(EXTRA_TYPE)) }
+            with(editStartDate) { this!!.setText(intent.getStringExtra(EXTRA_START_DATE)) }
+            with(editEndDate) { this!!.setText(intent.getStringExtra(EXTRA_END_DATE)) }
         } else {
-            setTitle("Add Trip");
+            title = "Add Trip"
         }
     }
 
-    private void saveTrip(){
-        String title = editTitle.getText().toString();
-        int image = R.drawable.blank;
-        String destination = editDestination.getText().toString();
-        String price;
-        if(editPrice.getText().toString().startsWith("$")){
-             price = editPrice.getText().toString();
-        } else{
-            price = "$"+ editPrice.getText().toString();
+    private fun saveTrip() {
+        val title = editTitle!!.text.toString()
+        val image = R.drawable.blank
+        val destination = editDestination!!.text.toString()
+        val price = if (editPrice!!.text.toString().startsWith("$")) {
+            editPrice!!.text.toString()
+        } else {
+            "$" + editPrice!!.text.toString()
         }
-        String rating = editRating.getText().toString();
-        String type = editType.getText().toString();
-        String startDate = editStartDate.getText().toString();
-        String endDate = editEndDate.getText().toString();
+        val rating = editRating!!.text.toString()
+        val type = editType!!.text.toString()
+        val startDate = editStartDate!!.text.toString()
+        val endDate = editEndDate!!.text.toString()
 
-        if(title.trim().isEmpty() || destination.trim().isEmpty() || price.trim().isEmpty() || rating.trim().isEmpty() || type.trim().isEmpty() || startDate.trim().isEmpty() || endDate.trim().isEmpty()){
-            Toast.makeText(this, "Please insert title, destination, price, type, rating, start date and end date for your trip", Toast.LENGTH_LONG).show();
-            return;
+        if (title.trim { it <= ' ' }.isEmpty() || destination.trim { it <= ' ' }
+                .isEmpty() || price.trim { it <= ' ' }.isEmpty() || rating.trim { it <= ' ' }
+                .isEmpty() || type.trim { it <= ' ' }.isEmpty() || startDate.trim { it <= ' ' }
+                .isEmpty() || endDate.trim { it <= ' ' }.isEmpty()) {
+            Toast.makeText(
+                this,
+                "Please insert title, destination, price, type, rating, start date and end date for your trip",
+                Toast.LENGTH_LONG
+            ).show()
+            return
         }
 
-        Intent data = new Intent();
-        data.putExtra(EXTRA_TITLE, title);
-        data.putExtra(EXTRA_IMAGE, image);
-        data.putExtra(EXTRA_DESTINATION, destination);
-        data.putExtra(EXTRA_PRICE, price);
-        data.putExtra(EXTRA_RATING, rating);
-        data.putExtra(EXTRA_TYPE, type);
-        data.putExtra(EXTRA_START_DATE, startDate);
-        data.putExtra(EXTRA_END_DATE, endDate);
-        data.putExtra(EXTRA_IS_FAVOURITE, false);
+        val data = Intent()
+        data.putExtra(EXTRA_TITLE, title)
+        data.putExtra(EXTRA_IMAGE, image)
+        data.putExtra(EXTRA_DESTINATION, destination)
+        data.putExtra(EXTRA_PRICE, price)
+        data.putExtra(EXTRA_RATING, rating)
+        data.putExtra(EXTRA_TYPE, type)
+        data.putExtra(EXTRA_START_DATE, startDate)
+        data.putExtra(EXTRA_END_DATE, endDate)
+        data.putExtra(EXTRA_IS_FAVOURITE, false)
 
-        int id = getIntent().getIntExtra(EXTRA_ID, -1);
+        val id = intent.getIntExtra(EXTRA_ID, -1)
         if (id != -1) {
-            data.putExtra(EXTRA_ID, id);
+            data.putExtra(EXTRA_ID, id)
         }
-        setResult(RESULT_OK, data);
-        finish();
+        setResult(RESULT_OK, data)
+        finish()
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater menuInflater = getMenuInflater();
-        menuInflater.inflate(R.menu.add_menu, menu);
-        return true;
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        val menuInflater = menuInflater
+        menuInflater.inflate(R.menu.add_menu, menu)
+        return true
     }
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.save_trip:
-                saveTrip();
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.save_trip -> {
+                saveTrip()
+                return true
+            }
+
+            else -> return super.onOptionsItemSelected(item)
         }
+    }
+
+    companion object {
+        const val EXTRA_IMAGE: String = "ro.scoalainformala.trips.EXTRA_IMAGE"
+        const val EXTRA_ID: String = "ro.scoalainformala.trips.EXTRA_ID"
+        const val EXTRA_TITLE: String = "ro.scoalainformala.trips.EXTRA_TITLE"
+        const val EXTRA_DESTINATION: String = "ro.scoalainformala.trips.EXTRA_DESTINATION"
+        const val EXTRA_PRICE: String = "ro.scoalainformala.trips.EXTRA_PRICE"
+        const val EXTRA_RATING: String = "ro.scoalainformala.trips.EXTRA_RATING"
+        const val EXTRA_TYPE: String = "ro.scoalainformala.trips.EXTRA_TYPE"
+        const val EXTRA_START_DATE: String = "ro.scoalainformala.trips.EXTRA_START_DATE"
+        const val EXTRA_END_DATE: String = "ro.scoalainformala.trips.EXTRA_END_DATE"
+        const val EXTRA_IS_FAVOURITE: String = "ro.scoalainformala.trips.EXTRA_IS_FAVOURITE"
     }
 }

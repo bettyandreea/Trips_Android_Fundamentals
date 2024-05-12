@@ -7,21 +7,21 @@ import androidx.lifecycle.LiveData
 class TripViewModel(application: Application) : AndroidViewModel(application) {
     private val tripRepository: TripRepository
     @JvmField
-    val trips: LiveData<List<Trip?>?>?
+    var trips: LiveData<List<Trip>>
     init {
-        val tripDao : TripDao = TripDatabase.getInstance(application)!!.tripDao
+        val tripDao = TripDatabase.getInstance(application).tripDao
         tripRepository = TripRepository(tripDao)
-        trips = tripRepository.trips
+        trips = this.tripRepository.trips
     }
 
-    val favTrips: LiveData<List<Trip?>?>?
+    val favTrips: LiveData<List<Trip>>
         get() = tripRepository.allFavouriteTrips
 
-    fun insert(trip: Trip?) {
+    fun insert(trip: Trip) {
         tripRepository.insert(trip)
     }
 
-    fun update(trip: Trip?) {
+    fun update(trip: Trip) {
         tripRepository.update(trip)
     }
 }

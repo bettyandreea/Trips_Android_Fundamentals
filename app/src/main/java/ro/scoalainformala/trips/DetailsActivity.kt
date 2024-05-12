@@ -1,225 +1,205 @@
-package ro.scoalainformala.trips;
+package ro.scoalainformala.trips
 
-import android.Manifest;
-import android.annotation.SuppressLint;
-import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.location.LocationListener;
-import android.location.LocationManager;
-import android.os.Bundle;
-import android.widget.TextView;
-import android.widget.Toast;
+import android.Manifest
+import android.annotation.SuppressLint
+import android.content.pm.PackageManager
+import android.location.Location
+import android.os.Bundle
+import android.widget.TextView
+import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.annotation.RequiresPermission
+import androidx.appcompat.app.AppCompatActivity
+import androidx.coordinatorlayout.widget.CoordinatorLayout
+import androidx.core.content.ContextCompat
+import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationServices
+import com.google.android.material.snackbar.Snackbar
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
 
-import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContracts;
-import androidx.annotation.NonNull;
-import androidx.annotation.RequiresPermission;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.coordinatorlayout.widget.CoordinatorLayout;
-import androidx.core.content.ContextCompat;
-
-import com.google.android.gms.location.FusedLocationProviderClient;
-import com.google.android.gms.location.LocationServices;
-import com.google.android.material.snackbar.Snackbar;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
-
-
-public class
-DetailsActivity extends AppCompatActivity {
-
+class DetailsActivity : AppCompatActivity() {
     // Location permission
     @SuppressLint("MissingPermission")
-    private ActivityResultLauncher<String> requestPermissionLauncher =
-            registerForActivityResult(new ActivityResultContracts.RequestPermission(), isGranted -> {
-                if(isGranted) {
-                    // Permission is granted. Continue the action or workflow in your app.
-                    displayCurrentUserLocation();
-                } else {
-                    // Explain to the user that the feature is unavailable because the
-                    // feature requires a permission that the user has denied. At the
-                    // same time, respect the user's decision. Don't link to system
-                    // settings in an effort to convince the user to change their decision
-                    handlePermissionDenied();
-                }
-            });
-    private FusedLocationProviderClient fusedLocationClient;
+    private val requestPermissionLauncher =
+        registerForActivityResult<String, Boolean>(ActivityResultContracts.RequestPermission()) { isGranted: Boolean ->
+            if (isGranted) {
+                // Permission is granted. Continue the action or workflow in your app.
+                displayCurrentUserLocation()
+            } else {
+                // Explain to the user that the feature is unavailable because the
+                // feature requires a permission that the user has denied. At the
+                // same time, respect the user's decision. Don't link to system
+                // settings in an effort to convince the user to change their decision
+                handlePermissionDenied()
+            }
+        }
+    private var fusedLocationClient: FusedLocationProviderClient? = null
 
-    public static final String EXTRA_IMAGE_D = "ro.scoalainformala.trips.EXTRA_IMAGE_D";
-    public static final String EXTRA_TITLE_D = "ro.scoalainformala.trips.EXTRA_TITLE_D";
-    public static final String EXTRA_DESTINATION_D = "ro.scoalainformala.trips.EXTRA_DESTINATION_D";
-    public static final String EXTRA_PRICE_D = "ro.scoalainformala.trips.EXTRA_PRICE_D";
-    public static final String EXTRA_RATING_D = "ro.scoalainformala.trips.EXTRA_RATING_D";
-    public static final String EXTRA_TYPE_D = "ro.scoalainformala.trips.EXTRA_TYPE_D";
-    public static final String EXTRA_START_DATE_D = "ro.scoalainformala.trips.EXTRA_START_DATE_D";
-    public static final String EXTRA_END_DATE_D = "ro.scoalainformala.trips.EXTRA_END_DATE_D";
-    public static final String EXTRA_IS_FAVOURITE_D = "ro.scoalainformala.trips.EXTRA_IS_FAVOURITE_D";
+    val APP_ID: String = "95742b5d52241bd561e65e6b5ec02605"
+    val WEATHER_URL: String = "https://api.openweathermap.org/"
+    private var lat: String? = null
+    private var lon: String? = null
+    private var city: String? = null
 
-    final String APP_ID = "95742b5d52241bd561e65e6b5ec02605";
-    final String WEATHER_URL = "https://api.openweathermap.org/";
-    private String lat;
-    private String lon;
-    private String city;
+    private var tripTitle: TextView? = null
+    private var tripDestination: TextView? = null
 
-    private TextView tripTitle;
-    private TextView tripDestination;
     //private RatingBar tripRating;
-    private TextView tripPrice;
-    private TextView tripType;
-    private TextView tripStartDate;
-    private TextView tripEndDate;
-    private TextView weather;
+    private var tripPrice: TextView? = null
+    private var tripType: TextView? = null
+    private var tripStartDate: TextView? = null
+    private var tripEndDate: TextView? = null
+    private var weather: TextView? = null
 
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_details);
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_details)
 
-        tripTitle = findViewById(R.id.details_trip_name);
-        tripDestination = findViewById(R.id.details_trip_destination);
+        tripTitle = findViewById(R.id.details_trip_name)
+        tripDestination = findViewById(R.id.details_trip_destination)
         //tripRating = findViewById(R.id.details_trip_rating);
-        tripPrice = findViewById(R.id.details_trip_price);
-        tripType = findViewById(R.id.details_trip_type);
-        tripStartDate = findViewById(R.id.details_start_date);
-        tripEndDate = findViewById(R.id.details_end_date);
-        weather = findViewById(R.id.details_weather_state);
+        tripPrice = findViewById(R.id.details_trip_price)
+        tripType = findViewById(R.id.details_trip_type)
+        tripStartDate = findViewById(R.id.details_start_date)
+        tripEndDate = findViewById(R.id.details_end_date)
+        weather = findViewById(R.id.details_weather_state)
 
-        Intent intent = getIntent();
+        val intent = intent
 
-        tripTitle.setText(intent.getStringExtra(EXTRA_TITLE_D));
-        tripDestination.setText(intent.getStringExtra(EXTRA_DESTINATION_D));
-        tripPrice.setText(intent.getStringExtra(EXTRA_PRICE_D));
-        //tripRating.setRating(Float.parseFloat(intent.getStringExtra(EXTRA_RATING_D)));
-        tripType.setText(intent.getStringExtra(EXTRA_TYPE_D));
-        tripStartDate.setText(intent.getStringExtra(EXTRA_START_DATE_D));
-        tripEndDate.setText(intent.getStringExtra(EXTRA_END_DATE_D));
+        with(tripTitle) { this!!.text = intent.getStringExtra(EXTRA_TITLE_D) }
+        with(tripDestination) { this!!.text = intent.getStringExtra(EXTRA_DESTINATION_D) }
+        with(tripPrice) { this!!.text = intent.getStringExtra(EXTRA_PRICE_D) }
+       //with(tripRating) { this!!.rating = intent.getStringExtra(EXTRA_RATING_D) }
+        with(tripType) { this!!.text = intent.getStringExtra(EXTRA_TYPE_D) }
+        with(tripStartDate) { this!!.text = intent.getStringExtra(EXTRA_START_DATE_D) }
+        with(tripEndDate) { this!!.text = intent.getStringExtra(EXTRA_END_DATE_D) }
 
 
         // city name to get weather in
-        city = tripDestination.getText().toString();
+        val dest = tripDestination;
+        if(dest != null)
+            city = dest.getText().toString()
 
-        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
 
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+        if (ContextCompat.checkSelfPermission(
+                this,
+                Manifest.permission.ACCESS_COARSE_LOCATION
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
             // Request location permission
-            requestPermissionLauncher.launch(Manifest.permission.ACCESS_COARSE_LOCATION);
-        } else if (city != null){
-            getCityData();
+            requestPermissionLauncher.launch(Manifest.permission.ACCESS_COARSE_LOCATION)
+        } else if (city != null) {
+            cityData
         } else {
-            getCurrentData();
+            currentData
         }
     }
 
     @RequiresPermission(Manifest.permission.ACCESS_COARSE_LOCATION)
-    private void displayCurrentUserLocation(){
-        fusedLocationClient.getLastLocation().addOnSuccessListener(this, location -> {
+    private fun displayCurrentUserLocation() {
+        fusedLocationClient!!.lastLocation.addOnSuccessListener(this) { location: Location? ->
             // Got last known location. In some rare situation this can be null.
-            if(location != null){
+            if (location != null) {
                 // Logic to handle location object
-                lat = String.valueOf(location.getLatitude());
-                lon = String.valueOf(location.getLongitude());
-            } else{
-                Toast.makeText(this, "Unknown location", Toast.LENGTH_LONG).show();
+                lat = location.latitude.toString()
+                lon = location.longitude.toString()
+            } else {
+                Toast.makeText(this, "Unknown location", Toast.LENGTH_LONG).show()
             }
-        });
+        }
     }
 
-    private void handlePermissionDenied(){
-        CoordinatorLayout coordinatorLayout = findViewById(R.id.coordinator);
+    private fun handlePermissionDenied() {
+        val coordinatorLayout = findViewById<CoordinatorLayout>(R.id.coordinator)
 
-        Snackbar.make(coordinatorLayout, R.string.no_location_error, Snackbar.LENGTH_LONG).show();
+        Snackbar.make(coordinatorLayout, R.string.no_location_error, Snackbar.LENGTH_LONG).show()
     }
 
-    // get weather in given city
-    private void getCityData() {
-        Retrofit retrofit = new Retrofit.Builder()
+    private val cityData: Unit
+        // get weather in given city
+        get() {
+            val retrofit = Retrofit.Builder()
                 .baseUrl(WEATHER_URL)
                 .addConverterFactory(GsonConverterFactory.create())
-                .build();
-        OpenWeatherService service = retrofit.create(OpenWeatherService.class);
-        Call<WeatherResponse> call = service.getWeatherCity(city, APP_ID);
-        call.enqueue(new Callback<WeatherResponse>() {
-            @Override
-            public void onResponse(@NonNull Call<WeatherResponse> call, @NonNull Response<WeatherResponse> response) {
-                if (response.code() == 200) {
-                    WeatherResponse weatherResponse = response.body();
-                    assert weatherResponse != null;
+                .build()
+            val service = retrofit.create(OpenWeatherService::class.java)
+            val call = service.getWeatherCity(city, APP_ID)
+            call.enqueue(object : Callback<WeatherResponse?> {
+                override fun onResponse(
+                    call: Call<WeatherResponse?>,
+                    response: Response<WeatherResponse?>
+                ) {
+                    if (response.code() == 200) {
+                        val weatherResponse = response.body()!!
+                        val stringBuilder = """
+                        Country: ${weatherResponse.sys.country}
+                        Temperature: ${Math.round(weatherResponse.main.temp - 273.15)}°C
+                        Temperature(Min): ${Math.round(weatherResponse.main.temp_min - 273.15)}°C
+                        Temperature(Max): ${Math.round(weatherResponse.main.temp_max - 273.15)}°C
+                        Humidity: ${Math.round(weatherResponse.main.humidity)}
+                        Pressure: ${Math.round(weatherResponse.main.pressure)}
+                        """.trimIndent()
 
-                    String stringBuilder = "Country: " +
-                            weatherResponse.sys.country +
-                            "\n" +
-                            "Temperature: " +
-                            Math.round(weatherResponse.main.temp - 273.15) +
-                            "°C\n" +
-                            "Temperature(Min): " +
-                            Math.round(weatherResponse.main.temp_min - 273.15) +
-                            "°C\n" +
-                            "Temperature(Max): " +
-                            Math.round(weatherResponse.main.temp_max - 273.15) +
-                            "°C\n" +
-                            "Humidity: " +
-                            Math.round(weatherResponse.main.humidity) +
-                            "\n" +
-                            "Pressure: " +
-                            Math.round(weatherResponse.main.pressure);
-
-                    weather.setText(stringBuilder);
+                        weather!!.text = stringBuilder
+                    }
                 }
-            }
 
-            @Override
-            public void onFailure(@NonNull Call<WeatherResponse> call, @NonNull Throwable t) {
-                weather.setText(t.getMessage());
-            }
-        });
-    }
+                override fun onFailure(call: Call<WeatherResponse?>, t: Throwable) {
+                    weather!!.text = t.message
+                }
+            })
+        }
 
-    // get weather in current location
-    private void getCurrentData() {
-        Retrofit retrofit = new Retrofit.Builder()
+    private val currentData: Unit
+        // get weather in current location
+        get() {
+            val retrofit = Retrofit.Builder()
                 .baseUrl(WEATHER_URL)
                 .addConverterFactory(GsonConverterFactory.create())
-                .build();
-        OpenWeatherService service = retrofit.create(OpenWeatherService.class);
-        Call<WeatherResponse> call = service.getWeather(lat, lon, APP_ID);
-        call.enqueue(new Callback<WeatherResponse>() {
-            @Override
-            public void onResponse(@NonNull Call<WeatherResponse> call, @NonNull Response<WeatherResponse> response) {
-                if (response.code() == 200) {
-                    WeatherResponse weatherResponse = response.body();
-                    assert weatherResponse != null;
+                .build()
+            val service = retrofit.create(OpenWeatherService::class.java)
+            val call = service.getWeather(lat, lon, APP_ID)
+            call.enqueue(object : Callback<WeatherResponse?> {
+                override fun onResponse(
+                    call: Call<WeatherResponse?>,
+                    response: Response<WeatherResponse?>
+                ) {
+                    if (response.code() == 200) {
+                        val weatherResponse = response.body()!!
+                        val stringBuilder = """
+                        Country: ${weatherResponse.sys.country}
+                        Temperature: ${weatherResponse.main.temp}
+                        Temperature(Min): ${weatherResponse.main.temp_min}
+                        Temperature(Max): ${weatherResponse.main.temp_max}
+                        Humidity: ${weatherResponse.main.humidity}
+                        Pressure: ${weatherResponse.main.pressure}
+                        """.trimIndent()
 
-                    String stringBuilder = "Country: " +
-                            weatherResponse.sys.country +
-                            "\n" +
-                            "Temperature: " +
-                            weatherResponse.main.temp +
-                            "\n" +
-                            "Temperature(Min): " +
-                            weatherResponse.main.temp_min +
-                            "\n" +
-                            "Temperature(Max): " +
-                            weatherResponse.main.temp_max +
-                            "\n" +
-                            "Humidity: " +
-                            weatherResponse.main.humidity +
-                            "\n" +
-                            "Pressure: " +
-                            weatherResponse.main.pressure;
-
-                    weather.setText(stringBuilder);
+                        weather!!.text = stringBuilder
+                    }
                 }
-            }
 
-            @Override
-            public void onFailure(@NonNull Call<WeatherResponse> call, @NonNull Throwable t) {
-                weather.setText(t.getMessage());
-            }
-        });
+                override fun onFailure(call: Call<WeatherResponse?>, t: Throwable) {
+                    weather!!.text = t.message
+                }
+            })
+        }
+
+    companion object {
+        const val EXTRA_IMAGE_D: String = "ro.scoalainformala.trips.EXTRA_IMAGE_D"
+        const val EXTRA_TITLE_D: String = "ro.scoalainformala.trips.EXTRA_TITLE_D"
+        const val EXTRA_DESTINATION_D: String = "ro.scoalainformala.trips.EXTRA_DESTINATION_D"
+        const val EXTRA_PRICE_D: String = "ro.scoalainformala.trips.EXTRA_PRICE_D"
+        const val EXTRA_RATING_D: String = "ro.scoalainformala.trips.EXTRA_RATING_D"
+        const val EXTRA_TYPE_D: String = "ro.scoalainformala.trips.EXTRA_TYPE_D"
+        const val EXTRA_START_DATE_D: String = "ro.scoalainformala.trips.EXTRA_START_DATE_D"
+        const val EXTRA_END_DATE_D: String = "ro.scoalainformala.trips.EXTRA_END_DATE_D"
+        const val EXTRA_IS_FAVOURITE_D: String = "ro.scoalainformala.trips.EXTRA_IS_FAVOURITE_D"
     }
 }

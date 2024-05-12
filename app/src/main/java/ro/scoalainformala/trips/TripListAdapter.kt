@@ -1,138 +1,107 @@
-package ro.scoalainformala.trips;
+package ro.scoalainformala.trips
 
-import android.content.Context;
-import android.content.Intent;
-import android.os.Bundle;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.CheckBox;
-import android.widget.CompoundButton;
-import android.widget.ImageView;
-import android.widget.RatingBar;
-import android.widget.TextView;
+import android.content.Context
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import android.widget.CheckBox
+import android.widget.ImageView
+import android.widget.RatingBar
+import android.widget.TextView
+import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
+import ro.scoalainformala.trips.Trip.Trip
+import ro.scoalainformala.trips.TripListAdapter.TripViewHolder
 
-import androidx.recyclerview.widget.RecyclerView;
+class TripListAdapter(context: Context?) : RecyclerView.Adapter<TripViewHolder>() {
+    private var listener: OnItemClickListener? = null
+    private val mInflater: LayoutInflater = LayoutInflater.from(context)
+    private var mTrips: List<Trip>? = null
 
-import com.bumptech.glide.Glide;
-
-import java.io.Serializable;
-import java.util.List;
-
-import ro.scoalainformala.trips.Trip.Trip;
-
-public class TripListAdapter extends RecyclerView.Adapter<TripListAdapter.TripViewHolder> {
-
-    private OnItemClickListener listener;
-    private final LayoutInflater mInflater;
-    private List<Trip> mTrips;
-
-    public interface OnItemClickListener {
-        void onItemClick(Trip trip);
-        void onLongItemClick(Trip trip);
-        void OnFavouriteItemClick(Trip trip);
+    interface OnItemClickListener {
+        fun onItemClick(trip: Trip?)
+        fun onLongItemClick(trip: Trip?)
+        fun OnFavouriteItemClick(trip: Trip?)
     }
 
-    public void setOnItemClickListener(OnItemClickListener listener) {
-        this.listener = listener;
+    fun setOnItemClickListener(listener: OnItemClickListener?) {
+        this.listener = listener
     }
 
-    public TripListAdapter(Context context) {
-        mInflater = LayoutInflater.from(context);
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TripViewHolder {
+        val itemView = mInflater.inflate(R.layout.recyclerview_item_trip, parent, false)
+        return TripViewHolder(itemView)
     }
 
-    @Override
-    public TripListAdapter.TripViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View itemView = mInflater.inflate(R.layout.recyclerview_item_trip, parent, false);
-        return new TripListAdapter.TripViewHolder(itemView);
-    }
-
-    @Override
-    public void onBindViewHolder(TripListAdapter.TripViewHolder holder, int position) {
+    override fun onBindViewHolder(holder: TripViewHolder, position: Int) {
         if (mTrips != null) {
-            Trip current = mTrips.get(position);
-            holder.tripName.setText(current.title);
+            val current = mTrips!![position]
+            holder.tripName.text = current.title
             Glide.with(holder.tripImage)
-                    .load(current.image)
-                    .into(holder.tripImage);
+                .load(current.image)
+                .into(holder.tripImage)
             //holder.tripImage.setImageResource(current.getImage());
-            holder.destination.setText(current.destination);
-            holder.price.setText(current.price);
-            holder.rating.setRating(current.rating);
-            holder.favourite.setChecked(current.isFavourite);
+            holder.destination.text = current.destination
+            holder.price.text = current.price
+            holder.rating.rating = current.rating
+            holder.favourite.isChecked = current.isFavourite
         } else {
-            holder.tripName.setText("Nothing");
-            holder.tripImage.setImageResource(R.drawable.blank);
-            holder.destination.setText("Nothing");
-            holder.price.setText("$0");
-            holder.rating.setRating(0F);
-            holder.favourite.setChecked(false);
+            holder.tripName.text = "Nothing"
+            holder.tripImage.setImageResource(R.drawable.blank)
+            holder.destination.text = "Nothing"
+            holder.price.text = "$0"
+            holder.rating.rating = 0f
+            holder.favourite.isChecked = false
         }
     }
 
-    void setTrips(List<Trip> trips) {
-        mTrips = trips;
-        notifyDataSetChanged();
+    fun setTrips(trips: List<Trip>?) {
+        mTrips = trips
+        notifyDataSetChanged()
     }
 
-    @Override
-    public int getItemCount() {
-        if (mTrips != null)
-            return mTrips.size();
-        else return 0;
+    override fun getItemCount(): Int {
+        return if (mTrips != null) mTrips!!.size
+        else 0
     }
 
-    public Trip getTripAt(int position) {
-        return mTrips.get(position);
+    fun getTripAt(position: Int): Trip {
+        return mTrips!![position]
     }
 
-    class TripViewHolder extends RecyclerView.ViewHolder {
-        private final ImageView tripImage;
-        private final TextView tripName;
-        private final TextView destination;
-        private final TextView price;
-        private final RatingBar rating;
-        private final CheckBox favourite;
+    inner class TripViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        val tripImage: ImageView = itemView.findViewById(R.id.trip_image)
+        val tripName: TextView = itemView.findViewById(R.id.trip_name)
+        val destination: TextView = itemView.findViewById(R.id.trip_destination)
+        val price: TextView = itemView.findViewById(R.id.trip_price)
+        val rating: RatingBar = itemView.findViewById(R.id.trip_rating)
 
-        private TripViewHolder(View itemView) {
-            super(itemView);
-            tripName = itemView.findViewById(R.id.trip_name);
-            tripImage = itemView.findViewById(R.id.trip_image);
-            destination = itemView.findViewById(R.id.trip_destination);
-            price = itemView.findViewById(R.id.trip_price);
-            rating = itemView.findViewById(R.id.trip_rating);
-            /*Button*/ favourite = itemView.findViewById(R.id.trip_check_favorites);
+        /*Button*/
+        val favourite: CheckBox = itemView.findViewById(R.id.trip_check_favorites)
 
-            itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    int position = getAdapterPosition();
-                    if (listener != null && position != RecyclerView.NO_POSITION)
-                        listener.onItemClick(mTrips.get(position));
+        init {
+            itemView.setOnClickListener {
+                val position = adapterPosition
+                if (listener != null && position != RecyclerView.NO_POSITION) listener!!.onItemClick(
+                    mTrips!![position]
+                )
+            }
+
+            itemView.setOnLongClickListener {
+                val position = adapterPosition
+                if (listener != null && position != RecyclerView.NO_POSITION) listener!!.onLongItemClick(
+                    mTrips!![position]
+                )
+                false
+            }
+
+            favourite.setOnClickListener {
+                val position = adapterPosition
+                if (listener != null && position != RecyclerView.NO_POSITION) {
+                    listener!!.OnFavouriteItemClick(mTrips!![position])
+                    favourite.isChecked = mTrips!![position].isFavourite
                 }
-            });
-
-            itemView.setOnLongClickListener(new View.OnLongClickListener() {
-                @Override
-                public boolean onLongClick(View v) {
-                    int position = getAdapterPosition();
-                    if(listener != null && position != RecyclerView.NO_POSITION)
-                        listener.onLongItemClick(mTrips.get(position));
-                    return false;
-                }
-            });
-
-            favourite.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    int position = getAdapterPosition();
-                    if(listener != null && position != RecyclerView.NO_POSITION){
-                        listener.OnFavouriteItemClick(mTrips.get(position));
-                        favourite.setChecked(mTrips.get(position).isFavourite);
-                    }
-                }
-            });
+            }
         }
     }
 }

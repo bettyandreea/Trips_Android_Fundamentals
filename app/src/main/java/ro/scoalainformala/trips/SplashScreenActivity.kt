@@ -1,15 +1,13 @@
-package ro.scoalainformala.trips;
+package ro.scoalainformala.trips
 
-import android.content.Intent;
-import android.os.Bundle;
+import android.content.Intent
+import android.os.Bundle
+import androidx.appcompat.app.AppCompatActivity
 
-import androidx.appcompat.app.AppCompatActivity;
-
-public class SplashScreenActivity extends AppCompatActivity {
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        startActivity(new Intent(SplashScreenActivity.this, HomeActivity.class));
-        finish();
+class SplashScreenActivity : AppCompatActivity() {
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        startActivity(Intent(this@SplashScreenActivity, HomeActivity::class.java))
+        finish()
     }
 }
