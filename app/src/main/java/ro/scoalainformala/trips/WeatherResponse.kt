@@ -1,88 +1,106 @@
-package ro.scoalainformala.trips;
+package ro.scoalainformala.trips
 
-import com.google.gson.annotations.SerializedName;
+import com.google.gson.annotations.SerializedName
 
-import java.util.ArrayList;
-
-public class WeatherResponse {
-
+class WeatherResponse {
     @SerializedName("coord")
-    public Coord coord;
+    var coord: Coord? = null
+
     @SerializedName("sys")
-    public Sys sys;
+    var sys: Sys? = null
+
     @SerializedName("weather")
-    public ArrayList<Weather> weather = new ArrayList<Weather>();
+    var weather: ArrayList<Weather> = ArrayList()
+
     @SerializedName("main")
-    public Main main;
+    var main: Main? = null
+
     @SerializedName("wind")
-    public Wind wind;
+    var wind: Wind? = null
+
     @SerializedName("rain")
-    public Rain rain;
+    var rain: Rain? = null
+
     @SerializedName("clouds")
-    public Clouds clouds;
+    var clouds: Clouds? = null
+
     @SerializedName("dt")
-    public float dt;
+    var dt: Float = 0f
+
     @SerializedName("id")
-    public int id;
+    var id: Int = 0
+
     @SerializedName("name")
-    public String name;
+    var name: String? = null
+
     @SerializedName("cod")
-    public float cod;
+    var cod: Float = 0f
 }
 
 class Weather {
     @SerializedName("id")
-    public int id;
+    var id: Int = 0
+
     @SerializedName("main")
-    public String main;
+    var main: String? = null
+
     @SerializedName("description")
-    public String description;
+    var description: String? = null
+
     @SerializedName("icon")
-    public String icon;
+    var icon: String? = null
 }
 
 class Clouds {
     @SerializedName("all")
-    public float all;
+    var all: Float = 0f
 }
 
 class Rain {
     @SerializedName("3h")
-    public float h3;
+    var h3: Float = 0f
 }
 
 class Wind {
     @SerializedName("speed")
-    public float speed;
+    var speed: Float = 0f
+
     @SerializedName("deg")
-    public float deg;
+    var deg: Float = 0f
 }
 
 class Main {
     @SerializedName("temp")
-    public float temp;
+    var temp: Float = 0f
+
     @SerializedName("humidity")
-    public float humidity;
+    var humidity: Float = 0f
+
     @SerializedName("pressure")
-    public float pressure;
+    var pressure: Float = 0f
+
     @SerializedName("temp_min")
-    public float temp_min;
+    var temp_min: Float = 0f
+
     @SerializedName("temp_max")
-    public float temp_max;
+    var temp_max: Float = 0f
 }
 
 class Sys {
     @SerializedName("country")
-    public String country;
+    var country: String? = null
+
     @SerializedName("sunrise")
-    public long sunrise;
+    var sunrise: Long = 0
+
     @SerializedName("sunset")
-    public long sunset;
+    var sunset: Long = 0
 }
 
 class Coord {
     @SerializedName("lon")
-    public float lon;
+    var lon: Float = 0f
+
     @SerializedName("lat")
-    public float lat;
+    var lat: Float = 0f
 }
